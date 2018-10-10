@@ -1,0 +1,28 @@
+@import 'gerenteIndex.css';
+
+* {
+	border: 0px solid;
+}
+html{
+	height: 100%;
+	width: 100%;
+}
+
+body{
+	height: 100%;
+	width: 100%;
+	background-color: #222;
+}
+
+.btn-primary {
+	background-color: #111;
+	color: #eee;
+	border: none;
+}
+.btn-primary:hover {
+	background-color: #009999;
+	border: none;
+}
+.container{
+	/*background-color: #222;*/
+}

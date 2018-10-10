@@ -1,0 +1,138 @@
+.navLateralGerente {
+	width: 20%;
+	background-color: #222;
+	color: #aaa;
+	overflow-x: hidden;
+}
+
+.navLateralGerente ul {
+    overflow-y: auto;
+    padding-bottom: 1em;
+}
+
+.navLateralGerente ::-webkit-scrollbar {
+	width: 12px;
+}
+
+::-webkit-scrollbar-track {
+	background: #111; 
+}
+::-webkit-scrollbar-thumb {
+	background: #555; 
+}
+
+.dropdown-container{
+	display: none;
+}
+
+.navLateralGerente img {
+	height: 10em;
+	width: 10em;
+	border-radius: 100%;
+}
+
+.navLateralGerente label {
+	font-size: 235%;
+}
+
+.display-4 {
+	font-size: 210%;
+}
+
+.btn-defaultOur, .btn-lg, .btn-sm {
+	background-color: #111;
+	color: #eee;
+	border: none;
+	outline: none; !important
+}
+
+.btn-sm {
+	height: 2.7em;
+}
+
+.btn-defaultOur:hover, .btn-lg:hover, .btn-sm:hover {
+	background-color: #009999;
+	border: none;
+	cursor: pointer;
+}
+
+.general {
+	background-image: url('../imgs/fundo1.png');
+	width: 80%;
+}
+
+.blocoFuncionalidade {
+	width: 80%;
+}
+
+.navLateralGerente button {
+	width: 12em;
+}
+
+.blocoFuncionalidade a{
+	height: 75%;
+	width: 33%;
+	margin: 0.5em; 
+	text-decoration: none; !important
+}
+
+.funcionalidadeGerente {
+	height: 100%;
+	width: 100%;
+	/*margin: 0.5em; */
+	display: flex; 
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	background-color: #222; !important
+}
+
+.funcionalidadeGerente i {
+	color: #00cccc;
+}
+
+.blocoFuncionario {
+	width: 80%;
+}
+
+.blocoFuncionario table {
+	margin-top: 5em;
+	width: 90%;
+	border: 1px solid;
+}
+
+.blocoFuncionario table tr {
+	height: 3em;
+}
+
+
+.blocoCategoria {
+	height: 90%;
+	width: 50%;
+	display: flex;
+	justify-content: start;
+	align-items: center;
+	flex-direction: column;
+}
+
+.blocoCategoria label {
+	width: 35%;
+	text-align: center;
+}
+
+.blocoCategoria table {
+	width: 90%;
+}
+
+.tabelaProdutos {
+    width: 90%;
+}
+
+.tabelaProdutos button {
+    
+}
+
+/* Configurações Inputs */
+.blocoCategoria input, .tabelaProdutos input, .blocoFuncionario input, .detalhesProduto input, .detalhesProduto textarea {
+    cursor: no-drop;
+}

@@ -1,0 +1,35 @@
+<?php
+
+use Illuminate\Database\Eloquent\Model as Eloquent;
+
+class Gerente extends Eloquent
+{
+	protected $table = 'Gerente';
+	protected $primaryKey = 'idGerente';
+	public $timestamps = false;
+
+	protected $fillable = ['grntNome', 'grntSobrenome', 'grntDataNasc', 'grntFoto', 'grntEmail', 'grntSenha', 'grntStatus'];
+
+	public static function count($email,$senha){
+		$existe = Gerente::whereRaw('grntEmail = ? and grntSenha = ?', [$email, $senha])->count() > 0;
+		$id = $existe ? Gerente::whereRaw('grntEmail = ? and grntSenha = ?', [$email, $senha])->firstOrFail()['idGerente'] : false;
+
+		return ['existe' => $existe, 'id' => $id];
+	}
+
+	public static function criar($nome,$sobrenome,$dataNasc,$email,$senha){
+		Gerente::create([
+			'grntNome' => $nome,
+			'grntSobrenome' => $sobrenome,
+			'grntDataNasc' => $dataNasc,
+			'grntEmail' => $email,
+			'grntSenha' => $senha, 
+			'grntStatus' => 'A'
+		]); 
+		return $nome.$sobrenome.$email.$senha;
+	}
+
+	public static function getNome($id){
+		return Gerente::find($id)->toArray()['grntNome'];
+	}
+}
