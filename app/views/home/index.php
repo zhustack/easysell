@@ -21,15 +21,15 @@
 				</div>
 				<input type="password" class="form-control" id="password" name="password" placeholder="Senha*" required>
 			</div>
-			<div class="form-group d-flex flex-row justify-content-between">
+			<!-- <div class="form-group d-flex flex-row justify-content-between">
 				<select class="custom-select col-sm-5" name="tipoConta" id="tipoConta" required>
 					<option selected disabled>Eu sou:</option>
 					<option value="gerente">Gerente</option>
 					<option value="funcionario">Funcionário</option>
 				</select>
+			</div> -->
 				<button name="btnLogin" class="btn btn-primary col-sm-6">Entrar</button>
-			</div>
-				<label class="text-warning text-center pl-3"></label>
+				<center>><label class="text-warning mt-2"><?php if($data['error']){echo 'Login e/ou senha incorreto!';}?></label></center
 	</form>
 	<span class="text-muted">Não possui conta? <a href="cadastrar">Cadastre-se</a>.</span>
 </div>

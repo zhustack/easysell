@@ -10,16 +10,16 @@
 		<li class="nav-item">
 			<a class="nav-link" href="#"><button class="btn-lg btn-defaultOur dropdown-btn">Produtos  <i class="fa fa-caret-down ml-2"></i></button></a>
 			<div class="dropdown-container text-center">
-				<a class="nav-link" href="../gerente/cadastrarprodutos">Cadastrar Produtos</a>
-				<a class="nav-link" href="produto">Gerenciar Produtos</a>
+				<a class="nav-link" href="/mvcaplicado/public/gerente/cadastrarprodutos">Cadastrar Produtos</a>
+				<a class="nav-link" href="/mvcaplicado/public/gerente/produto">Gerenciar Produtos</a>
 				<a class="nav-link" href="/mvcaplicado/public/gerente/categoriasemarcas">Categorias e Marcas</a>
 			</div>
 		</li>
 		<li class="nav-item">
-			<a class="nav-link" href="../gerente/funcionario"><button class="btn-lg btn-defaultOur dropdown-btn">Equipe</button></a>
+			<a class="nav-link" href="/mvcaplicado/public/gerente/funcionario"><button class="btn-lg btn-defaultOur dropdown-btn">Equipe</button></a>
 		</li>
 		<li class="nav-item">
-			<a class="nav-link" href="#"><button class="btn-lg btn-defaultOur dropdown-btn">Configurações</button></a><br>
+			<a class="nav-link" href="/mvcaplicado/public/gerente/funcionario"><button class="btn-lg btn-defaultOur dropdown-btn">Configurações</button></a><br>
 		</li>
 		<li class="nav-item d-flex justify-content-end pr-4">
 			<a href="/mvcaplicado/public/gerente/index"><button class="btn-defaultOur mr-3 rounded" style="width: 4em;">Home</button></a>

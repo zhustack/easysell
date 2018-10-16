@@ -42,12 +42,14 @@
                                             <input type="text" id="<?= $produto['idProduto']."produtoQtde" ?>" class="form-control form-control-sm" name="produtoQtde" value="<?= str_replace('-', ' ', $produto['prdtQuantidade']) ?>" ondblclick="ativaInput(this.id)" readonly/>
                                         </td>
                                         <td style="width: 10em;">
-                                            <select id="<?= $produto['idProduto']."produtoCategoria" ?>" class="selectCat custom-select w-100" name="fStatus">
+                                            <select id="<?= $produto['idProduto']."produtoCategoria" ?>" class="selectCat custom-select w-100" name="produtoCategoria">
                                                 <option value="<?= $produto['idCategoria'];?>"><?= str_replace('-', ' ',$produto['ctgrNome']); ?></option>
                                             </select>
                                         </td>
                                         <td>
-                                            <input type="text" id="<?= $produto['idProduto']."produtoMarca" ?>" class="form-control form-control-sm" name="produtoMarca" value="<?= str_replace('-', ' ', $produto['mrcNome']) ?>" ondblclick="ativaInput(this.id)" readonly/>
+                                            <select id="<?= $produto['idProduto']."produtoMarca" ?>" class="selectMarca custom-select w-100" name="produtoMarca">
+                                                <option value="<?= $produto['idMarca'];?>"><?= str_replace('-', ' ',$produto['mrcNome']); ?></option>
+                                            </select>
                                         </td>
 										<td class="d-flex flex-row justify-content-between">
 											<button class="btn btn-defaultOur btn-sm" name="updateProd" onClick="alterarDadosProd(<?= $produto['idProduto']."idProduto" ?>)"><i class="fas fa-check-square"></i></button>
@@ -99,18 +101,46 @@
                 }       
         }
         
+         function  carregaMarcaP() {
+                var selectMarca = document.getElementsByClassName("selectMarca");
+                var conexao = new XMLHttpRequest();
+                
+                for(c=0; c<selectMarca.length;c++){
+                    let inicial = selectMarca[c].childElementCount;
+                    for (i = 0; i < inicial; i++) {
+                        selectMarca[c].options.remove(selectMarca[c].lastChild);
+                    }
+                }
+                 conexao.open('GET', '/mvcaplicado/public/marca/listAll/<?=$data["idFuncionario"] ?>');
+                 conexao.send();
+                 conexao.onload = () => {
+                      marcas = JSON.parse(conexao.responseText);
+                      for(c=0;c<selectMarca.length;c++){
+                            
+                      selectMarca[c].insertAdjacentHTML('beforeend', '<option disabled="disabled">Marca</option>');
+
+                      for(a=0;a<marcas.length;a++){
+                         selectMarca[c].insertAdjacentHTML('beforeend','<option value='+marcas[a].idMarca+'>'+marcas[a].mrcNome.replace('-',' ')+'</option>');
+                      }
+                      selectMarca[c].insertAdjacentHTML('beforeend', '<option value="add">Adicionar</option>');               
+                
+                }
+                }       
+        }
+        
         carregaCatP();
+        carregaMarcaP();
         
         function alteraProduto($id) {
             let id = parseInt($id);
 			var dados = {
 		 			"id": ""+document.getElementById(id+"idProduto").value+"",
 		 			"codigo": ""+document.getElementById(id+"idProduto").value+"",
-		 			"nome": ""+document.getElementById(id+"produtoNome").value.replace(' ','-')+""
+		 			"nome": ""+document.getElementById(id+"produtoNome").value.replace(' ','-')+"",
 		 			"valor": ""+document.getElementById(id+"produtoValor").value+"",
 		 			"quantidade": ""+document.getElementById(id+"produtoQuantidade").value+"",
-		 			"categoria": ""+document.getElementById(id+"idProduto").value+"",
-		 			"id": ""+document.getElementById(id+"idProduto").value+"",
+		 			"categoria": ""+document.getElementById(id+"produtoCategoria").value+"",
+		 			"marca": ""+document.getElementById(id+"produtoMarca").value+"",
 		 	}
 		 	dadosJson = JSON.stringify(dados);
 		 	var conexao = new XMLHttpRequest();

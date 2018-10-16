@@ -3,9 +3,13 @@
 class HomeController extends Controller
 {
 
-	public function index()
+	public function index($param ='')
 	{
-		$this->view('home/index',['titlePage' => 'Entrar']);
+        if($param == ''){
+		  $this->view('home/index',['titlePage' => 'Entrar', 'error' => false]);  
+        }else {
+		  $this->view('home/index',['titlePage' => 'Entrar', 'error' => true]);  
+        }
 
 	}
 
@@ -43,8 +47,6 @@ class HomeController extends Controller
 			} else {
 				if ( Vendedor::whereRaw('fEmail = ? and fSenha = ? and fStatus = "A" and idTipoFunc = 2', [$email, $senha])->count() > 0) {
 					header('Location: index');
-				} else if ( Vendedor::whereRaw('fEmail = ? and fSenha = ? and fStatus = "R" and idTipoFunc = 2', [$email, $senha])->count() > 0) {
-					header('Location: index');
 				} else {
 					Vendedor::create([
 						'fNome' => $nome,
@@ -57,7 +59,7 @@ class HomeController extends Controller
 						'fELider' => $_POST['emailGerente'],
 						'idTipoFunc' => 2
 					]);
-					header('location: index');
+					header('location: /mvcaplicado/public/home/index');
 				}
 			}
 
@@ -89,26 +91,21 @@ class HomeController extends Controller
 
 	}
 
-	public function login(){
-		if (isset($_POST['btnLogin'])) {
-			if ($_POST['tipoConta'] == 'gerente') {
-					if (Gerente::whereRaw('fEmail = ? and fSenha = ? and fStatus = "A" and idTipoFunc = 1', [$_POST['email'], $_POST['password']])->count() > 0) {
-						session_start();
-						$_SESSION['dadosGerente'] = Gerente::whereRaw('fEmail = ? and fSenha = ? and fStatus = "A" and idTipoFunc = 1', [$_POST['email'], $_POST['password']])->firstOrFail()->toArray();
-						header('Location: /mvcaplicado/public/gerente/index');
-					} else {
-						header('location: /mvcaplicado/public/home/index');
-					} 
-			} else {
-				if (Vendedor::whereRaw('fEmail = ? and fSenha = ? and fStatus = "A" and idTipoFunc = 2', [$_POST['email'], $_POST['password']])->count() > 0) {
-					header('Location: /mvcaplicado/public/funcionario/index');
-				} else if (Vendedor::whereRaw('fEmail = ? and fSenha = ? and fStatus = "R" and idTipoFunc = 2', [$_POST['email'], $_POST['password']])->count() > 0) {
-					header('Location: /mvcaplicado/public/funcionario/aguardeAtivacao');
-				} else {
-					header('Location: /mvcaplicado/public/home/index');
-				}
-			}
-		} 
-	}
+    public function login(){
+        if (isset($_POST['btnLogin'])) {
 
+            if (Gerente::whereRaw('fEmail = ? and fSenha = ? and fStatus = "A" and idTipoFunc = 1', [$_POST['email'], $_POST['password']])->count() > 0) {
+                session_start();
+                $_SESSION['dadosGerente'] = Gerente::whereRaw('fEmail = ? and fSenha = ? and fStatus = "A" and idTipoFunc = 1', [$_POST['email'], $_POST['password']])->firstOrFail()->toArray();
+                header('Location: /mvcaplicado/public/gerente/index');
+            } else if (Vendedor::whereRaw('fEmail = ? and fSenha = ? and fStatus = "A" and idTipoFunc = 2', [$_POST['email'], $_POST['password']])->count() > 0) {
+                header('Location: /mvcaplicado/public/funcionario/index');
+            } else if (Vendedor::whereRaw('fEmail = ? and fSenha = ? and fStatus = "R" and idTipoFunc = 2', [$_POST['email'], $_POST['password']])->count() > 0) {
+                header('Location: /mvcaplicado/public/funcionario/aguardeAtivacao');
+            } else {
+                header('Location: /mvcaplicado/public/home/index/error');
+            }
+        }
+    } 
+    
 }
