@@ -1,0 +1,50 @@
+	.painelVendas{
+		height: 90%;
+		width: 90%;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+	}
+	.painelEsquerdo{
+		width: 48%;
+		height: 100%;
+	}
+	.painelDireito{
+		width: 48%;
+	}
+	/*.infoEscuros{
+		background-color: #111;
+		color: #eee;
+	}
+	.botaoDeMerda{
+		background-color: #111;
+		color: #eee;
+	}
+	.botaoDeMerda:hover{
+		background-color: #009999;	
+	}*/
+	.itensAdicionadosDesc{
+		height: 14.25em;
+		overflow: auto;
+		
+	}
+	.itensAdicionadosCell{
+		display: none;
+	}
+	.conjBotao{
+		background-color: #f2f2f2;
+	}
+	.painelVendas span{
+		display: flex;
+		flex-direction: column;
+	}
+	#selectProdVenda{
+		height: 2.5em;
+	}
+	.conteudos nav{
+		height: 10%;
+	}
+	#alinhamento{
+		width: 47%;
+	}
+	
