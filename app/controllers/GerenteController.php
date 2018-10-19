@@ -30,9 +30,9 @@ class GerenteController extends Controller
 	}
 
 	public function categoriasemarcas() {
-		$arrayCategegorias = Categoria::whereRaw('idFuncionario = ?', [$this->gerente['idFuncionario']])->get()->toArray();
+		$arrayCategegorias = Categoria::whereRaw('idFuncionario = ? and ctgrStatus = "A"', [$this->gerente['idFuncionario']])->get()->toArray();
 
-		$arrayMarcas = Marca::whereRaw('idFuncionario = ?', [$this->gerente['idFuncionario']])->get()->toArray();
+		$arrayMarcas = Marca::whereRaw('idFuncionario = ? and mrcStatus = "A"', [$this->gerente['idFuncionario']])->get()->toArray();
 
 		$this->view('gerente/categoriasemarcas',
 			[
@@ -58,31 +58,70 @@ class GerenteController extends Controller
 		);
 	}
     
-    public function produto($details = '', $id = '') {
+    public function produto($details = '', $id = '', $msg = '') {
         if($details == 'detalhes' && !empty($id) && $id != '') {
-            $produtoDetails = Produto::join('Categoria', 'Produto.idCategoria', '=', 'Categoria.idCategoria')->join('Marca','Produto.idMarca','=','Marca.idMarca')->whereRaw('Categoria.idFuncionario = ? and idProduto = ?', [$this->gerente['idFuncionario'], $id])->get()->toArray();
             
-            $this->view('gerente/detalhesprodutos',[
-                'titlePage' => "Detalhes Produtos",
-                'nomeGerente' => $this->gerente['fNome'],
-                'imgPerfil' => $this->gerente['fFoto'], 
-                'produto' => $produtoDetails,
-                'idFuncionario' => $this->gerente['idFuncionario']
-            ]);
+            $produtoDetails = Produto::join('Categoria', 'Produto.idCategoria', '=', 'Categoria.idCategoria')->join('Marca','Produto.idMarca','=','Marca.idMarca')->whereRaw('prdtStatus = "a" and Categoria.idFuncionario = ? and idProduto = ?', [$this->gerente['idFuncionario'], $id])->get()->toArray();
+            
+            if(isset($produtoDetails[0])){
+               $this->view('gerente/detalhesprodutos',[
+                    'titlePage' => "Detalhes Produtos",
+                    'nomeGerente' => $this->gerente['fNome'],
+                    'imgPerfil' => $this->gerente['fFoto'], 
+                    'produto' => $produtoDetails,
+                    'msg' => $msg = 'sucess' ? $msg : '',
+                    'idFuncionario' => $this->gerente['idFuncionario']
+                ]); 
+            } else {
+                header('location: /mvcaplicado/public/gerente/produto/error');
+            }
         } else {
-            $arrayProdutos = Produto::join('Categoria', 'Produto.idCategoria', '=', 'Categoria.idCategoria')->join('Marca','Produto.idMarca','=','Marca.idMarca')->whereRaw('Categoria.idFuncionario = ?', [$this->gerente['idFuncionario']])->get()->toArray();
+            if(isset($_GET['searchprod']) && $_GET['searchprod'] != '') {
+                $arrayProdutos = Produto::join('Categoria', 'Produto.idCategoria', '=', 'Categoria.idCategoria')->join('Marca','Produto.idMarca','=','Marca.idMarca')->whereRaw('prdtStatus = "a" and prdtCodigo = ? and Categoria.idFuncionario = ?', [$_GET['searchprod'],$this->gerente['idFuncionario']])->get()->toArray();
+                $this->view('gerente/produtos',
+                [
+                    'titlePage' => "Gerenciar Produtos",
+                    'nomeGerente' => $this->gerente['fNome'],
+                    'imgPerfil' => $this->gerente['fFoto'], 
+                    'produtos' => $arrayProdutos,
+                    'msg' => $details = 'error' ? $details : '',
+                    'idFuncionario' => $this->gerente['idFuncionario']
+                ]
+                        );    
+            } else {
+            $arrayProdutos = Produto::join('Categoria', 'Produto.idCategoria', '=', 'Categoria.idCategoria')->join('Marca','Produto.idMarca','=','Marca.idMarca')->whereRaw('prdtStatus = "a" and Categoria.idFuncionario = ?', [$this->gerente['idFuncionario']])->get()->toArray();    
             $this->view('gerente/produtos',
                 [
                     'titlePage' => "Gerenciar Produtos",
                     'nomeGerente' => $this->gerente['fNome'],
                     'imgPerfil' => $this->gerente['fFoto'], 
                     'produtos' => $arrayProdutos,
+                    'msg' => $details = 'error' ? $details : '',
                     'idFuncionario' => $this->gerente['idFuncionario']
                 ]
                         );
+            }
         }
     }
 
+    public function caixa(){
+        
+//        if (Venda::)
+        
+        $arrayProdutos = Produto::join('Categoria', 'Produto.idCategoria', '=', 'Categoria.idCategoria')->join('Marca','Produto.idMarca','=','Marca.idMarca')->whereRaw('prdtStatus = "a" and Categoria.idFuncionario = ?', [$this->gerente['idFuncionario']])->get()->toArray();   
+        
+        $this->view('gerente/caixa',
+                   [
+                    'titlePage' => "Caixa",
+                    'nomeGerente' => $this->gerente['fNome'],
+                    'imgPerfil' => $this->gerente['fFoto'], 
+                    'produtos' => $arrayProdutos,
+                    'idFuncionario' => $this->gerente['idFuncionario']
+                   ]
+                   
+                   );
+    }
+    
     public function showParams($params=""){
         echo $params;
     }

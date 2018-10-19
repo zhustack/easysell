@@ -8,6 +8,6 @@ class Marca extends Eloquent
 	protected $primaryKey = 'idMarca';
 	public $timestamps = false;
 
-	protected $fillable = ['mrcNome', 'idFuncionario'];
+	protected $fillable = ['mrcNome', 'idFuncionario', 'mrcStatus'];
 
 }

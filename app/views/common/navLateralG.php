@@ -5,7 +5,7 @@
 	</span>
 	<ul class="nav d-inline-block h-75">
 		<li class="nav-item">
-			<a class="nav-link" href="#"><button class="btn-lg btn-defaultOur dropdown-btn">Vendas</button></a>
+			<a class="nav-link" href="/mvcaplicado/public/gerente/caixa"><button class="btn-lg btn-defaultOur dropdown-btn">Vendas</button></a>
 		</li>
 		<li class="nav-item">
 			<a class="nav-link" href="#"><button class="btn-lg btn-defaultOur dropdown-btn">Produtos  <i class="fa fa-caret-down ml-2"></i></button></a>

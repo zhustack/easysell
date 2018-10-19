@@ -7,9 +7,12 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Categoria' => $baseDir . '/app/models/Categoria.php',
+    'Cliente' => $baseDir . '/app/models/Cliente.php',
     'Funcionario' => $baseDir . '/app/models/Funcionario.php',
     'Gerente' => $baseDir . '/app/models/Gerente.php',
+    'Item' => $baseDir . '/app/models/Item.php',
     'Marca' => $baseDir . '/app/models/Marca.php',
     'Produto' => $baseDir . '/app/models/Produto.php',
+    'Venda' => $baseDir . '/app/models/Venda.php',
     'Vendedor' => $baseDir . '/app/models/Vendedor.php',
 );

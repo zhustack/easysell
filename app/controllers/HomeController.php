@@ -42,7 +42,7 @@ class HomeController extends Controller
 						'fStatus' => "A",
 						'idTipoFunc' => 1
 					]);
-					header('location: index');
+//					header('location: index');
 				}
 			} else {
 				if ( Vendedor::whereRaw('fEmail = ? and fSenha = ? and fStatus = "A" and idTipoFunc = 2', [$email, $senha])->count() > 0) {

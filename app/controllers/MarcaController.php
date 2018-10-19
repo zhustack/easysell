@@ -6,7 +6,8 @@ class MarcaController extends Controller {
 		$mrcArray= json_decode($mrcJSON);
 		Marca::CREATE([
 			'mrcNome' => $mrcArray->mrcNome,
-			'idFuncionario' => $mrcArray->idFuncionario
+			'idFuncionario' => $mrcArray->idFuncionario,
+            'mrcStatus' => 'A'
 		]);
 
 		// echo $ctgrArray;
@@ -25,11 +26,13 @@ class MarcaController extends Controller {
 
 	public function delete($id) {
 		$marca = Marca::find($id);
-		$marca->delete();
+		$marca->update([
+            'mrcStatus' => 'I'
+        ]);
 	}
 
 	public function listAll($id) {
-		$lista = Marca::whereRaw('idFuncionario = ?', [$id])->get();
+		$lista = Marca::whereRaw('idFuncionario = ? and mrcStatus = "A"', [$id])->get();
 		echo json_encode($lista);
 	}
 

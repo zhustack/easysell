@@ -31,7 +31,7 @@
 				<button name="btnLogin" class="btn btn-primary col-sm-6">Entrar</button>
 				<center>><label class="text-warning mt-2"><?php if($data['error']){echo 'Login e/ou senha incorreto!';}?></label></center
 	</form>
-	<span class="text-muted">Não possui conta? <a href="cadastrar">Cadastre-se</a>.</span>
+	<span class="text-muted">Não possui conta? <a href="/mvcaplicado/public/home/cadastrar">Cadastre-se</a>.</span>
 </div>
 </body>
 

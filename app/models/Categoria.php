@@ -8,6 +8,6 @@ class Categoria extends Eloquent
 	protected $primaryKey = 'idCategoria';
 	public $timestamps = false;
 
-	protected $fillable = ['ctgrNome', 'idFuncionario'];
+	protected $fillable = ['ctgrNome', 'idFuncionario', 'ctgrStatus'];
 
 }

@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 	<?php require_once "../app/views/common/head.php"; ?>
-
 	<body>
 		<div class="container-fluid p-0 m-0 h-100 w-100 d-flex flex-row">
 				<?php require_once "../app/views/common/navLateralG.php"; ?>
 				<div class="general h-100 d-flex flex-column justify-content-start align-items-center">
-					<form class="w-50 detalhesProduto" method="post" action="/mvcaplicado/public/produto/create/">
+					<form class="w-50 detalhesProduto" method="post" action="/mvcaplicado/public/produto/editar">
 
 						<center><label class="display-4 bg-dark text-light rounded p-1 mt-5 mb-3">Detalhes</label><center></center>
 						<input type="hidden" name="idProduto" id="idProduto" value="<?= $data['produto']['0']['idProduto']?>">
@@ -21,7 +20,7 @@
 							<div class="input-group-prepend">
 							<div class="input-group-text">#</div>
 							</div>
-							<input onDblClick="ativaInput(this.id)" type="text" class="form-control" id="prodName" name="prodName" placeholder="Nome do Produto*" value="<?= $data['produto']['0']['prdtNome']?>" readonly required>
+							<input onDblClick="ativaInput(this.id)" type="text" class="form-control" id="prodName" name="prodName" placeholder="Nome do Produto*" value="<?= str_replace('-',' ', $data['produto']['0']['prdtNome']);?>" readonly required>
 						</div>
 
                         <div class="form-row">
@@ -66,6 +65,9 @@
 				</div>
 		</div>
 	</body>
+    <?php if($data['msg']) {
+        echo '<script type="text/javascript">alert("Alteração Sucedida!"); </script>';
+} ?>
 		<script type="text/javascript">
 		function carregarMarcas(){
             
@@ -168,5 +170,6 @@
 		}
 		carregarMarcas();
         carregarCategorias();
+            
 	</script>
 </html>

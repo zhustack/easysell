@@ -6,7 +6,8 @@ class CategoriaController extends Controller {
 		$ctgrArray= json_decode($ctgrJSON);
 		Categoria::CREATE([
 			'ctgrNome' => $ctgrArray->ctgrNome,
-			'idFuncionario' => $ctgrArray->idFuncionario
+			'idFuncionario' => $ctgrArray->idFuncionario,
+            'ctgrStatus' => 'A'
 		]);
 
 		// echo $ctgrArray;
@@ -25,7 +26,9 @@ class CategoriaController extends Controller {
 
 	public function delete($id) {
 		$categoria = Categoria::find($id);
-		$categoria->delete();
+		$categoria->update([
+            'ctgrStatus' => 'I'
+        ]);
         
         echo $id;
 	}

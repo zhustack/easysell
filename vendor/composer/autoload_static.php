@@ -80,10 +80,13 @@ class ComposerStaticInit943f27169c91a8a0f8423ce2ed14acab
 
     public static $classMap = array (
         'Categoria' => __DIR__ . '/../..' . '/app/models/Categoria.php',
+        'Cliente' => __DIR__ . '/../..' . '/app/models/Cliente.php',
         'Funcionario' => __DIR__ . '/../..' . '/app/models/Funcionario.php',
         'Gerente' => __DIR__ . '/../..' . '/app/models/Gerente.php',
+        'Item' => __DIR__ . '/../..' . '/app/models/Item.php',
         'Marca' => __DIR__ . '/../..' . '/app/models/Marca.php',
         'Produto' => __DIR__ . '/../..' . '/app/models/Produto.php',
+        'Venda' => __DIR__ . '/../..' . '/app/models/Venda.php',
         'Vendedor' => __DIR__ . '/../..' . '/app/models/Vendedor.php',
     );
 
