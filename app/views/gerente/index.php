@@ -7,7 +7,7 @@
 			<?php require_once "../app/views/common/navLateralG.php"; ?>
 			<div class="general blocoFuncionalidade h-100 pl-5 pr-5 bg-white justify-content-center align-items-center d-flex flex-wrap">
 				<div class="container-fluid d-flex justify-content-center align-items-center flex-row h-50">
-				<a href="#"><div class="funcionalidadeGerente rounded">
+				<a href="/mvcaplicado/public/gerente/caixa"><div class="funcionalidadeGerente rounded">
 					<i class="fas fa-money-bill-wave fa-5x"></i><br>
 					<label class="display-4">Caixa</label>
 				</div></a>

@@ -105,9 +105,7 @@ class GerenteController extends Controller
     }
 
     public function caixa(){
-        
-//        if (Venda::)
-        
+
         $arrayProdutos = Produto::join('Categoria', 'Produto.idCategoria', '=', 'Categoria.idCategoria')->join('Marca','Produto.idMarca','=','Marca.idMarca')->whereRaw('prdtStatus = "a" and Categoria.idFuncionario = ?', [$this->gerente['idFuncionario']])->get()->toArray();   
         
         $this->view('gerente/caixa',

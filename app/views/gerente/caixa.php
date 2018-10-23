@@ -24,7 +24,6 @@
 									?>
 								</select> -->
 							</span>
-						<form action="" method="post">
 							<div class="input-group">
 								<div class="input-group-prepend">
 									<span class="input-group-text espacamento">
@@ -69,7 +68,7 @@
 								
 								
 							</div>
-							<button type="submit" name="addItem" class="btn btn-defaultOur" value="btn">Adicionar Item</button>
+							<button name="addItem" onClick="fnAddItem()" class="btn btn-defaultOur" value="btn">Adicionar Item</button>
 						<?php
 						/*
 						if (pegaUltimoID() <=0) {
@@ -88,7 +87,7 @@
 						?>
 							<span class="itensAdicionadosDesc mt-3">
 								<label class="display-4 text-center bg-dark text-light p-1 mb-0">Itens</label>
-								<table class=" tabelinha w-100 table table-hover rounded table-bordered table-light">
+								<table class=" tabelinha w-100 table table-hover rounded table-bordered table-light" id="eTblItem">
 									<tr>
 										<th scope="col">Cód.</th>
 										<th scope="col">Nome</th>
@@ -119,7 +118,6 @@
 									?>
 								</table>
 								</span>
-						</form>
 						
 					</div>
 					<div class="painelDireito">
@@ -196,23 +194,70 @@
         </div>
     </body>
     <script>
+		var idCliente;
+		var idVenda;
+
+		document.body.onload = fnVerVenda();
+		
+		function fnVerVenda(){
+            const venda = new XMLHttpRequest();
+            venda.open('GET', '/mvcaplicado/public/venda/consultaAberta/'+<?= $data['idFuncionario'] ?>);
+            venda.send();
+            venda.onload = () => {
+                if(venda.responseText == false)  {
+					fnCriarCliente();
+				} else {
+					idVenda = venda.responseText;
+				}
+            }
+        }
+
+		function fnCriarCliente(){
+			const cliente = new XMLHttpRequest();
+			cliente.open('GET', '/mvcaplicado/public/cliente/create/<?= $data["idFuncionario"] ?>');
+			cliente.send();
+			cliente.onload = () => {
+				idCliente = cliente.responseText;
+				fnAbrirVenda(idCliente);
+			}
+		}
+        
+		function fnAbrirVenda(idCliente) {
+			const venda = new XMLHttpRequest();
+			venda.open('GET', '/mvcaplicado/public/venda/abrir/'+<?= $data ['idFuncionario'] ?>+'/'+idCliente);
+			venda.send();
+			venda.onload = () => {
+				idVenda = venda.responseText;
+				console.log(idVenda);
+			}
+		}
+		var idProduto, prdtCodigo, prdtNome;
         function carregaProduto(codigo) {
             const conexao = new XMLHttpRequest();
             conexao.open('GET', '/mvcaplicado/public/produto/show/<?= $data['idFuncionario'] ?>/' + codigo);
             conexao.send();
             conexao.onload = () => {
                 produto = JSON.parse(conexao.responseText);
-                with(document.all) {
-                    prdtNome.value = produto[0].prdtNome;
-                    prdtValor.value = produto[0].prdtValor;
-                }
+				idProduto = document.all.idProduto.value = produto[0].idProduto;
+                prdtNome = document.all.prdtNome.value = produto[0].prdtNome;
+				document.all.prdtValor.value = produto[0].prdtValor;
+				prdtCodigo = codigo;
             }
         }
         
         function fazTotal(){
             document.getElementById('valorTotal').value = (document.getElementById('prdtValor').value * document.getElementById('qtdeItem').value).toFixed(2);
-            
         }
+
+		function fnAddItem(){
+			const conexao = new XMLHttpRequest();
+			conexao.open('GET','/mvcaplicado/public/item/create/'+idProduto+'/'+document.all.qtdeItem.value+'/'+idVenda);
+			conexao.send();
+			conexao.onload = () => {
+				let tabela = document.all.eTblItem;
+				tabela.insertAdjacentHTML("beforeend", "<tr id='"+Math.random()+"'><td>" + prdtCodigo + "</td><td>" + prdtNome + "</td><td>" + document.all.qtdeItem.value + "</td><td>" + document.getElementById('valorTotal').value + "</td></tr>");
+			}
+		}
         
     </script>
 </html>

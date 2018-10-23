@@ -34,7 +34,7 @@ class CategoriaController extends Controller {
 	}
     
     public function listAll($id) {
-        $lista = Categoria::whereRaw('idFuncionario = ?', [$id])->get();
+        $lista = Categoria::whereRaw('idFuncionario = ? and ctgrStatus = "A"', [$id])->get();
 		echo json_encode($lista);
 	}
 
