@@ -90,17 +90,18 @@
 			var
 				ctgrNome = document.getElementById("catCriar").value.replace(' ', '-');
 				conexao = new XMLHttpRequest(),
-				dados = {
-					"idFuncionario":"<?= $data['idFuncionario'] ?>",
-					"ctgrNome":""+ctgrNome+""
-				};
-			dadosJSON = JSON.stringify(dados);
 
-			conexao.open('GET', '/mvcaplicado/public/categoria/criar/'+dadosJSON);
+			conexao.open('GET', '/mvcaplicado/public/categoria/criar/'+ctgrNome);
 			conexao.send();
 
 			conexao.onload = function() {
-				location.reload(true);
+				if(conexao.responseText == 1) {
+					location.reload(true);
+				} else {
+					alert('Categoria já cadastrada!');
+					document.getElementById('catCriar').value = '';
+					document.getElementById('catCriar').focus();
+				}
 			}
 
 		}
@@ -111,12 +112,11 @@
 				var idCat = parseInt(document.getElementById($id).value);
 				conexao.open('GET', '/mvcaplicado/public/categoria/delete/'+idCat);
 				conexao.send();
-				// location.reload(true);
 				conexao.onload = function() {
-					if(!isNaN(conexao.responseText)){
+					if(conexao.responseText == 1){
                         location.reload(true);
 				    } else {
-                        alert("Certifique-se de excluir os produtos ligados a esta categoria!");
+                        alert("Erro ao buscar categoria!");
                     } 
 			     }
 		  }
@@ -136,10 +136,14 @@
 		 	conexao.open('GET', '/mvcaplicado/public/categoria/editar/'+dadosJson);
 		 	conexao.send();
 		 	conexao.onload = function () {
-		 		location.reload(true);
-		 		// console.log(dadosJson);
+		 		if(conexao.responseText == 1){
+					location.reload(true);
+				}else {
+					alert('Não foi possível alterar o nome da categoria!');
+					document.getElementById(id +"nomeCategoria").focus();
+				}
+
 		 	}
-		 	// console.log(dadosJson);
 		}
 
 		function criarMarca() {

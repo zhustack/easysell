@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 class ProdutoController extends Controller {
 	public function index() {
 		echo "<label>Você está em produtos<label>";
@@ -7,23 +9,34 @@ class ProdutoController extends Controller {
 
 	public function create() {
         extract($_POST);
-        Produto::CREATE([
-            'prdtCodigo' => $codeProd,
-            'prdtNome' => $prodName,
-            'prdtValor' => $valorUni,
-            'prdtQuantidade' => $quantidade,
-            'prdtStatus' => 'A',
-            'prdtDescricao' => $descricao,
-            'idCategoria' => $prodCat,
-            'idMarca' => $prodMarc
-        ]);
-		header('Location: /mvcaplicado/public/gerente/cadastrarprodutos');
+
+        if(Produto::whereRaw('prdtCodigo = ? and prdtStatus = "A"', [$codeProd])->get()->count() <= 0) {
+            Produto::CREATE([
+                'prdtCodigo' => $codeProd,
+                'prdtNome' => $prodName,
+                'prdtValor' => $valorUni,
+                'prdtQuantidade' => $quantidade,
+                'prdtStatus' => 'A',
+                'prdtDescricao' => $descricao,
+                'idCategoria' => $prodCat,
+                'idMarca' => $prodMarc
+            ]);
+            $_SESSION['prdtSucess'] = 1;
+            header('Location: /mvcaplicado/public/gerente/cadastrarprodutos');
+        } else {
+            $_SESSION['prdtSucess'] = 0;
+            header('Location: /mvcaplicado/public/gerente/cadastrarprodutos');
+        }
+       
 	}
     
-    public function show($idF, $idP) {
-        $produtoDetails = Produto::join('Categoria', 'Produto.idCategoria', '=', 'Categoria.idCategoria')->join('Marca','Produto.idMarca','=','Marca.idMarca')->whereRaw('prdtStatus = "a" and Categoria.idFuncionario = ? and (idProduto = ? or prdtCodigo = ?)', [$idF, $idP, $idP])->get()->toArray();
-        
-        echo json_encode($produtoDetails);
+    public function show($idP) {
+        if(isset($_SESSION['dadosGerente'])) {
+            $produtoDetails = Produto::join('Categoria', 'Produto.idCategoria', '=', 'Categoria.idCategoria')->join('Marca','Produto.idMarca','=','Marca.idMarca')->whereRaw('prdtStatus = "a" and Categoria.idFuncionario = ? and (idProduto = ? or prdtCodigo = ?)', [$_SESSION['dadosGerente']['idFuncionario'], $idP, $idP])->get()->toArray();
+            echo json_encode($produtoDetails);
+        } else {
+            echo 0;
+        }
     }
     
     public function editar($dados = '') {

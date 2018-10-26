@@ -47,18 +47,34 @@ class GerenteController extends Controller
 	}
 
 	public function cadastrarprodutos() {
+        if(isset($_SESSION['prdtSucess'])) {
+            $prdtSucess = $_SESSION['prdtSucess'];
+            unset($_SESSION['prdtSucess']);
+        } else {
+            $prdtSucess = -1;
+        }
+
 		$this->view('gerente/cadastrarprodutos',
 			[
 				'titlePage' => "Cadastrar Produtos",
 				'nomeGerente' => $this->gerente['fNome'],
-				'imgPerfil' => $this->gerente['fFoto'], 
-				'idFuncionario' => $this->gerente['idFuncionario']
+                'imgPerfil' => $this->gerente['fFoto'], 
+                'prdtSucess' => $prdtSucess,
+                'idFuncionario' => $this->gerente['idFuncionario']
 			]
 
 		);
 	}
     
-    public function produto($details = '', $id = '', $msg = '') {
+    public function produto($details = '', $id = '') {
+
+        if(isset($_SESSION['prdtError'])) {
+            $prdtError = $_SESSION['prdtError'];
+            unset($_SESSION['prdtError']);
+        } else {
+            $prdtError = 0;
+        }
+
         if($details == 'detalhes' && !empty($id) && $id != '') {
             
             $produtoDetails = Produto::join('Categoria', 'Produto.idCategoria', '=', 'Categoria.idCategoria')->join('Marca','Produto.idMarca','=','Marca.idMarca')->whereRaw('prdtStatus = "a" and Categoria.idFuncionario = ? and idProduto = ?', [$this->gerente['idFuncionario'], $id])->get()->toArray();
@@ -69,11 +85,11 @@ class GerenteController extends Controller
                     'nomeGerente' => $this->gerente['fNome'],
                     'imgPerfil' => $this->gerente['fFoto'], 
                     'produto' => $produtoDetails,
-                    'msg' => $msg = 'sucess' ? $msg : '',
                     'idFuncionario' => $this->gerente['idFuncionario']
                 ]); 
             } else {
-                header('location: /mvcaplicado/public/gerente/produto/error');
+                $_SESSION['prdtError'] = 1;
+                header('location: /mvcaplicado/public/gerente/produto');
             }
         } else {
             if(isset($_GET['searchprod']) && $_GET['searchprod'] != '') {
@@ -84,11 +100,12 @@ class GerenteController extends Controller
                     'nomeGerente' => $this->gerente['fNome'],
                     'imgPerfil' => $this->gerente['fFoto'], 
                     'produtos' => $arrayProdutos,
-                    'msg' => $details = 'error' ? $details : '',
+                    'msg' => $prdtError,
                     'idFuncionario' => $this->gerente['idFuncionario']
                 ]
                         );    
             } else {
+            
             $arrayProdutos = Produto::join('Categoria', 'Produto.idCategoria', '=', 'Categoria.idCategoria')->join('Marca','Produto.idMarca','=','Marca.idMarca')->whereRaw('prdtStatus = "a" and Categoria.idFuncionario = ?', [$this->gerente['idFuncionario']])->get()->toArray();    
             $this->view('gerente/produtos',
                 [
@@ -96,7 +113,7 @@ class GerenteController extends Controller
                     'nomeGerente' => $this->gerente['fNome'],
                     'imgPerfil' => $this->gerente['fFoto'], 
                     'produtos' => $arrayProdutos,
-                    'msg' => $details = 'error' ? $details : '',
+                    'msg' => $prdtError,
                     'idFuncionario' => $this->gerente['idFuncionario']
                 ]
                         );

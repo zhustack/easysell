@@ -29,7 +29,7 @@
 									<span class="input-group-text espacamento">
 									<i class="fas fa-barcode"></i></span>
 								</div>
-								<input onblur="carregaProduto(this.value)" class="form-control" list="listCodigos" type="text" name="prodVenda" id="prodVenda" placeholder="Insira o código do produto" autocomplete="off"/>
+								<input onblur="carregaProduto(this.value)" class="form-control" list="listCodigos" type="text" name="prdtCodigo" id="prdtCodigo" placeholder="Insira o código do produto" autocomplete="off"/>
                                 
                                 <datalist id="listCodigos">
                                     <?php foreach($data['produtos'] as $produto){ ?>
@@ -64,7 +64,7 @@
 									<span class="input-group-text espacamento">
 									<i class="fas fa-cart-plus"></i></span>
 								</div>
-								<input class="form-control inputt" type="text" id="valorTotal" autocomplete="off" name="valorTotal" placeholder="Total"/>
+								<input class="form-control inputt" type="text" id="valorTotal" autocomplete="off" name="valorTotal" placeholder="Total" readonly/>
 								
 								
 							</div>
@@ -92,7 +92,7 @@
 										<th scope="col">Cód.</th>
 										<th scope="col">Nome</th>
 										<th scope="col">Qtd.</th>
-										<th scope="col">Total</th>
+										<th scope="col">Subtotal</th>
 										<th scope="col">X</th>
 									</tr>
 									<?php
@@ -228,21 +228,42 @@
 			venda.send();
 			venda.onload = () => {
 				idVenda = venda.responseText;
-				console.log(idVenda);
+				// console.log(idVenda);
 			}
 		}
-		var idProduto, prdtCodigo, prdtNome;
+		var idProduto, prdtCodigo, prdtNome, prdtValor;
+
         function carregaProduto(codigo) {
-            const conexao = new XMLHttpRequest();
-            conexao.open('GET', '/mvcaplicado/public/produto/show/<?= $data['idFuncionario'] ?>/' + codigo);
-            conexao.send();
-            conexao.onload = () => {
-                produto = JSON.parse(conexao.responseText);
-				idProduto = document.all.idProduto.value = produto[0].idProduto;
-                prdtNome = document.all.prdtNome.value = produto[0].prdtNome;
-				document.all.prdtValor.value = produto[0].prdtValor;
-				prdtCodigo = codigo;
-            }
+			var bFind;
+
+			for(i=0;i < document.all.listCodigos.children.length; i++) {
+				if( codigo == document.all.listCodigos.children[i].value ) {
+					bFind = true;
+				} else {
+					bFind = false;
+				}
+			}
+
+            if(bFind == true){
+				const conexao = new XMLHttpRequest();
+				conexao.open('GET', '/mvcaplicado/public/produto/show/<?= $data['idFuncionario'] ?>/' + codigo);
+				conexao.send();
+				conexao.onload = () => {
+					produto = JSON.parse(conexao.responseText);
+					idProduto = document.all.idProduto.value = produto[0].idProduto;
+					prdtNome = document.all.prdtNome.value = produto[0].prdtNome.replace('-',' ').replace('-',' ');
+					prdtValor = document.all.prdtValor.value = produto[0].prdtValor;
+					prdtCodigo = codigo;
+
+					document.all.qtdeItem.focus();
+				}
+			} else {
+				// alert('Produto não encontrado!');
+				document.all.prdtCodigo.value = '';
+				document.all.prdtCodigo.focus();
+				document.all.prdtCodigo.placeholder = 'Produto não encontrado!';
+				
+			}
         }
         
         function fazTotal(){
@@ -250,13 +271,60 @@
         }
 
 		function fnAddItem(){
-			const conexao = new XMLHttpRequest();
-			conexao.open('GET','/mvcaplicado/public/item/create/'+idProduto+'/'+document.all.qtdeItem.value+'/'+idVenda);
-			conexao.send();
-			conexao.onload = () => {
-				let tabela = document.all.eTblItem;
-				tabela.insertAdjacentHTML("beforeend", "<tr id='"+Math.random()+"'><td>" + prdtCodigo + "</td><td>" + prdtNome + "</td><td>" + document.all.qtdeItem.value + "</td><td>" + document.getElementById('valorTotal').value + "</td></tr>");
+
+			let tabela = document.all.eTblItem;
+
+			if(fnCountItens(prdtCodigo)) {
+				tabela.insertAdjacentHTML("beforeend", "<tr id='"+Math.random()+"'><td class='tdCodigo'>" + prdtCodigo + "</td><td>" + prdtNome + "</td><td onclick='fnGetItem(this)' onblur='fnSoma(nItemInicial,this.innerText, this.nextElementSibling)' contentEditable='true'>" + document.all.qtdeItem.value + "</td><td>" + document.getElementById('valorTotal').value + "</td></tr>");
+				const conexao = new XMLHttpRequest();
+				conexao.open('GET','/mvcaplicado/public/item/create/'+idProduto+'/'+document.all.qtdeItem.value+'/'+idVenda);
+				conexao.send();
+				fnLimpaCampoItem();
+			} else {
+				alert('Item já adicionado! \nAltera a quantidade na lista de itens!');
+				fnLimpaCampoItem();
 			}
+
+		}
+
+		function fnCountItens(nCodigo) {
+			let tdCodigo = document.getElementsByClassName('tdCodigo');
+			if(tdCodigo.length > 0){
+				for (i = 0;i < tdCodigo.length; i++) {
+					if(nCodigo == tdCodigo[i].innerText) {
+						return i;
+					}
+
+					return true;
+				}
+			} 
+
+			return true;
+		}
+		
+		var nItemInicial;
+
+		function fnGetItem(nV) {
+			nItemInicial = nV.innerText;
+			nEInicial = nV;
+		}
+
+		function fnSoma(nV, nQtdeItem,  nVtotal) {
+			if(nQtdeItem != 0){
+				nUnitario = parseFloat(nVtotal.innerText) / parseFloat(nV);
+				nVtotal.innerText = (parseFloat(nUnitario) * parseFloat(nQtdeItem)).toFixed(2);
+			} else {
+				// alert('Insira um valor válido!');
+				nEInicial.focus();	
+			}
+		}
+
+		function fnLimpaCampoItem() {
+			document.all.idProduto.value = "";
+			document.all.prdtNome.value = "";
+			document.all.prdtValor.value = "";
+			document.all.prdtCodigo.value = "";
+			document.all.valorTotal[0].value = "";
 		}
         
     </script>

@@ -121,7 +121,7 @@
                         selectCat[c].options.remove(selectCat[c].lastChild);
                     }
                 }
-                 conexao.open('GET', '/mvcaplicado/public/categoria/listAll/<?=$data["idFuncionario"] ?>');
+                 conexao.open('GET', '/mvcaplicado/public/categoria/listAll');
                  conexao.send();
                  conexao.onload = () => {
                       categorias = JSON.parse(conexao.responseText);
@@ -152,7 +152,7 @@
                         selectMarca[c].options.remove(selectMarca[c].lastChild);
                     }
                 }
-                 conexao.open('GET', '/mvcaplicado/public/marca/listAll/<?=$data["idFuncionario"] ?>');
+                 conexao.open('GET', '/mvcaplicado/public/marca/listAll/');
                  conexao.send();
                  conexao.onload = () => {
                       marcas = JSON.parse(conexao.responseText);
@@ -181,7 +181,7 @@
 			var dados = {
 		 			"id": ""+document.getElementById(id+"idProduto").value+"",
 		 			"codigo": ""+document.getElementById(id+"produtoCodigo").value+"",
-		 			"nome": ""+document.getElementById(id+"produtoNome").value.replace(' ','-')+"",
+		 			"nome": ""+document.getElementById(id+"produtoNome").value.replace(' ','-').replace(' ','-')+"",
 		 			"valor": ""+document.getElementById(id+"produtoValor").value+"",
 		 			"quantidade": ""+document.getElementById(id+"produtoQtde").value+"",
 		 			"categoria": ""+document.getElementById(id+"produtoCategoria").value+"",
@@ -243,7 +243,7 @@
         }
 */        
     </script>
-        <?php if($data['msg'] == 'error') {
-        echo "<script type='text/javascript'>alert('Produto não encontrado!');</script>";
+        <?php if($data['msg'] == 1) {
+            echo "<script type='text/javascript'>alert('Produto não encontrado!');</script>";
          } ?>
 </html>

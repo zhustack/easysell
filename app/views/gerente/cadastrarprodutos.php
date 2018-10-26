@@ -160,5 +160,13 @@
         
 		carregarMarcas();
         carregarCategorias();
+
 	</script>
+	<?php
+		 if($data['prdtSucess'] == 1) {
+			echo "<script type='text/javascript'>alert('Cadastro Realizado!');</script>"; 
+		} else if($data['prdtSucess'] == 0) {
+			echo "<script type='text/javascript'>alert('Produto já cadastrado!');</script>";
+		} 
+	?>
 </html>
