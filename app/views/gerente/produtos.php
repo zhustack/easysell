@@ -136,7 +136,7 @@
                             selectCat[c].insertAdjacentHTML('beforeend','<option value='+categorias[a].idCategoria+'>'+categorias[a].ctgrNome.replace('-',' ')+'</option>');
                          }
                       }
-                      selectCat[c].insertAdjacentHTML('beforeend', '<option value="add">Adicionar</option>');               
+                    //   selectCat[c].insertAdjacentHTML('beforeend', '<option value="add">Adicionar</option>');               
                 
                 }
                 }       
@@ -167,12 +167,12 @@
                             selectMarca[c].insertAdjacentHTML('beforeend','<option   value='+marcas[a].idMarca+'>'+marcas[a].mrcNome.replace('-',' ')+'</option>');
                         }
                       }
-                      selectMarca[c].insertAdjacentHTML('beforeend', '<option value="add">Adicionar</option>');               
+                    //   selectMarca[c].insertAdjacentHTML('beforeend', '<option value="add">Adicionar</option>');               
                 
                 }
                 }       
         }
-        
+    
         carregaCatP();
         carregaMarcaP();
         
@@ -192,7 +192,11 @@
 		 	conexao.open('GET', '/mvcaplicado/public/produto/editar/'+dadosJson);
 		 	conexao.send();
 		 	conexao.onload = function () {
-		 		location.reload(true);
+                if(conexao.responseText == 1) {
+		 		    location.reload(true);
+                } else {
+                    alert('Error');
+                }
 		 		// console.log(conexao.responseText);
 		 	}
 		 	// console.log(dadosJson);
@@ -206,7 +210,7 @@
 				conexao.send();
 				// location.reload(true);
 				conexao.onload = function() {
-					if(!isNaN(conexao.responseText)){
+					if(conexao.responseText == 1){
                         location.reload(true);
 				    } else {
                         alert("Erro ao tentar excluir!");
@@ -244,6 +248,6 @@
 */        
     </script>
         <?php if($data['msg'] == 1) {
-            echo "<script type='text/javascript'>alert('Produto não encontrado!');</script>";
+            echo "<script type='text/javascript'>alert('Produto inexistente!');</script>";
          } ?>
 </html>

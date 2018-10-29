@@ -72,18 +72,26 @@ class GerenteController extends Controller
             $prdtError = $_SESSION['prdtError'];
             unset($_SESSION['prdtError']);
         } else {
-            $prdtError = 0;
+            $prdtError = -1;
+        }
+
+        if(isset($_SESSION['prdtSucess'])) {
+            $prdtSucess = $_SESSION['prdtSucess'];
+            unset($_SESSION['prdtSucess']);
+        } else {
+            $prdtSucess = -1;
         }
 
         if($details == 'detalhes' && !empty($id) && $id != '') {
             
-            $produtoDetails = Produto::join('Categoria', 'Produto.idCategoria', '=', 'Categoria.idCategoria')->join('Marca','Produto.idMarca','=','Marca.idMarca')->whereRaw('prdtStatus = "a" and Categoria.idFuncionario = ? and idProduto = ?', [$this->gerente['idFuncionario'], $id])->get()->toArray();
+            $produtoDetails = Produto::join('Categoria', 'Produto.idCategoria', '=', 'Categoria.idCategoria')->join('Marca','Produto.idMarca','=','Marca.idMarca')->whereRaw('prdtStatus = "A" and Categoria.idFuncionario = ? and idProduto = ?', [$this->gerente['idFuncionario'], $id])->get()->toArray();
             
             if(isset($produtoDetails[0])){
                $this->view('gerente/detalhesprodutos',[
                     'titlePage' => "Detalhes Produtos",
                     'nomeGerente' => $this->gerente['fNome'],
-                    'imgPerfil' => $this->gerente['fFoto'], 
+                    'imgPerfil' => $this->gerente['fFoto'],
+                    'msg' => $prdtSucess,
                     'produto' => $produtoDetails,
                     'idFuncionario' => $this->gerente['idFuncionario']
                 ]); 

@@ -246,7 +246,7 @@
 
             if(bFind == true){
 				const conexao = new XMLHttpRequest();
-				conexao.open('GET', '/mvcaplicado/public/produto/show/<?= $data['idFuncionario'] ?>/' + codigo);
+				conexao.open('GET', '/mvcaplicado/public/produto/show/' + codigo);
 				conexao.send();
 				conexao.onload = () => {
 					produto = JSON.parse(conexao.responseText);

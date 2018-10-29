@@ -14,7 +14,7 @@ class ProdutoController extends Controller {
             Produto::CREATE([
                 'prdtCodigo' => $codeProd,
                 'prdtNome' => $prodName,
-                'prdtValor' => $valorUni,
+                'prdtValor' => str_replace(',','.', $valorUni),
                 'prdtQuantidade' => $quantidade,
                 'prdtStatus' => 'A',
                 'prdtDescricao' => $descricao,
@@ -32,46 +32,72 @@ class ProdutoController extends Controller {
     
     public function show($idP) {
         if(isset($_SESSION['dadosGerente'])) {
-            $produtoDetails = Produto::join('Categoria', 'Produto.idCategoria', '=', 'Categoria.idCategoria')->join('Marca','Produto.idMarca','=','Marca.idMarca')->whereRaw('prdtStatus = "a" and Categoria.idFuncionario = ? and (idProduto = ? or prdtCodigo = ?)', [$_SESSION['dadosGerente']['idFuncionario'], $idP, $idP])->get()->toArray();
+            $produtoDetails = Produto::join('Categoria', 'Produto.idCategoria', '=', 'Categoria.idCategoria')->join('Marca','Produto.idMarca','=','Marca.idMarca')->whereRaw('prdtStatus = "A" and Categoria.idFuncionario = ? and (idProduto = ? or prdtCodigo = ?)', [$_SESSION['dadosGerente']['idFuncionario'], $idP, $idP])->get()->toArray();
             echo json_encode($produtoDetails);
         } else {
             echo 0;
+        }
+    }
+
+    public function search($codigo) {
+        if(Produto::join('Categoria', 'Produto.idCategoria', '=', 'Categoria.idCategoria')->whereRaw('prdtStatus = "A" and Categoria.idFuncionario = ? and prdtCodigo = ?', [$_SESSION['dadosGerente']['idFuncionario'], $codigo])->get()->count() > 0){
+            echo 0;
+        } else {
+            echo 1;
         }
     }
     
     public function editar($dados = '') {
         if($dados == '') {
             extract($_POST);
-            $produto = Produto::find($idProduto);
-            $produto->update([
-                'prdtCodigo' => $codeProd,
-                'prdtNome' => $prodName,
-                'prdtValor' => $valorUni,
-                'prdtQuantidade' => $quantidade,
-                'prdtDescricao' => $descricao,
-                'idCategoria' => $prodCat,
-                'idMarca' => $prodMarc 
-            ]);
+
+            if(Produto::join('categoria', 'Produto.idCategoria', '=', 'Categoria.idCategoria')->whereRaw('prdtStatus = "A" and idFuncionario = ? and prdtCodigo = ?', [$_SESSION['dadosGerente']['idFuncionario'], $codeProd])->get()->count() <= 0){
+                $produto = Produto::find($idProduto);
+                $produto->update([
+                    'prdtCodigo' => $codeProd,
+                    'prdtNome' => $prodName,
+                    'prdtValor' => str_replace(',','.',$valorUni),
+                    'prdtQuantidade' => $quantidade,
+                    'prdtDescricao' => $descricao,
+                    'idCategoria' => $prodCat,
+                    'idMarca' => $prodMarc 
+                ]);
+                $_SESSION['prdtSucess'] = 1;
+            } else {
+                $_SESSION['prdtSucess'] = 0;
+            }
+            header('location: /mvcaplicado/public/gerente/produto/detalhes/'.$idProduto.'');
         } else {
             $dadosArray = json_decode($dados);
-            $produto = Produto::find($dadosArray->id);
-            $produto->update([
-                'prdtCodigo' => $dadosArray->codigo,
-                'prdtNome' => $dadosArray->nome,
-                'prdtValor' => $dadosArray->valor,
-                'prdtQuantidade' => $dadosArray->quantidade,
-                'idCategoria' => $dadosArray->categoria,
-                'idMarca' => $dadosArray->marca
-            ]);
+            if(Produto::join('categoria', 'Produto.idCategoria', '=', 'Categoria.idCategoria')->whereRaw('prdtStatus = "A" and idFuncionario = ? and prdtCodigo = ?', [$_SESSION['dadosGerente']['idFuncionario'], $dadosArray->codigo])->get()->count() <= 0){
+                $produto = Produto::find($dadosArray->id);
+                $produto->update([
+                    'prdtCodigo' => $dadosArray->codigo,
+                    'prdtNome' => $dadosArray->nome,
+                    'prdtValor' => str_replace(',', '.', $dadosArray->valor),
+                    'prdtQuantidade' => $dadosArray->quantidade,
+                    'idCategoria' => $dadosArray->categoria,
+                    'idMarca' => $dadosArray->marca
+                ]);
+
+                echo 1;
+            } else {
+                echo 0;
+            }
         }
         
-        header('location: /mvcaplicado/public/gerente/produto/detalhes/'.$idProduto.'/sucess');
+        // header('location: /mvcaplicado/public/gerente/produto/detalhes/'.$idProduto.'/sucess');
     }
     
     public function delete($id) {
-        $produto = Produto::find($id);
-        $produto->update([
-            'prdtStatus' => 'I'
-        ]);
+        if(Produto::join('categoria', 'Produto.idCategoria', '=', 'Categoria.idCategoria')->whereRaw('prdtStatus = "A" and idFuncionario = ? and idProduto = ?', [$_SESSION['dadosGerente']['idFuncionario'], $id])->get()->count() > 0){
+            $produto = Produto::find($id);
+            $produto->update([
+                'prdtStatus' => 'I'
+            ]);
+            echo 1;
+        } else {
+            echo 0;
+        }
     }
 }

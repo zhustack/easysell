@@ -150,17 +150,18 @@
 			var
 				mrcNome = document.getElementById("marcaCriar").value.replace(' ', '-');
 				conexao = new XMLHttpRequest(),
-				dados = {
-					"idFuncionario":"<?= $data['idFuncionario'] ?>",
-					"mrcNome":""+mrcNome+""
-				};
-			dadosJSON = JSON.stringify(dados);
 
-			conexao.open('GET', '/mvcaplicado/public/marca/criar/'+dadosJSON);
+			conexao.open('GET', '/mvcaplicado/public/marca/criar/'+mrcNome);
 			conexao.send();
 
 			conexao.onload = function() {
-				location.reload(true);
+				if(conexao.responseText == 1) {
+					location.reload(true);
+				} else {
+					alert('Marca já cadastrada!');
+					document.getElementById('marcaCriar').value = '';
+					document.getElementById('marcaCriar').focus();
+				}
 			}
 
 		}
@@ -171,12 +172,12 @@
 				var idMarca = parseInt(document.getElementById($id).value);
 				conexao.open('GET', '/mvcaplicado/public/marca/delete/'+idMarca);
 				conexao.send();
-				// location.reload(true);
+	
 				conexao.onload = function() {
-					if(!isNaN(conexao.responseText)){
+					if(conexao.responseText == 1){
                         location.reload(true);
 				    } else {
-                        alert("Certifique-se de excluir os produtos ligados a esta marca!");
+                        alert("Erro ao buscar marca!");
                     } 
 			     }
 			} else {
@@ -195,10 +196,13 @@
 		 	conexao.open('GET', '/mvcaplicado/public/marca/editar/'+dadosJson);
 		 	conexao.send();
 		 	conexao.onload = function () {
-		 		location.reload(true);
-		 		// console.log(conexao.responseText);
+				if(conexao.responseText == 1) {
+		 			location.reload(true);
+				} else {
+					alert('Não foi possível alterar o nome da marca!');
+					document.getElementById(id +"marcaNome").focus();
+				}
 		 	}
-		 	// console.log(dadosJson);
 		}
 	</script>
 </html>

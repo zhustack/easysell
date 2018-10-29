@@ -15,7 +15,7 @@
 							<div class="input-group-prepend">
 							<div class="input-group-text">#</div>
 							</div>
-							<input type="text" class="form-control" id="codeProd" name="codeProd" placeholder="Código do Produto*" required>
+							<input type="text" class="form-control" id="codeProd" name="codeProd" onblur="fnBuscaCodigo(this.value)" placeholder="Código do Produto*" required>
 						</div>
 
 						<div class="input-group input-group-lg mb-2">
@@ -71,7 +71,7 @@
 			let selectMarca = document.getElementById("prodMarc");
 
 			var conexao = new XMLHttpRequest();
-			conexao.open('GET', '/mvcaplicado/public/marca/listAll/<?=$data["idFuncionario"] ?>');
+			conexao.open('GET', '/mvcaplicado/public/marca/listAll');
 			conexao.send();
 			conexao.onload = () => {
 
@@ -96,18 +96,17 @@
 					selectMarca.options.remove(selectMarca.lastChild);
 				}
 				marcaNome = prompt('Digite o nome da marca:').replace(' ', '-');
-				dados = {
-					"idFuncionario":"<?= $data['idFuncionario'] ?>",
-					"mrcNome":""+marcaNome+""
-				};
-				dadosJSON = JSON.stringify(dados);
 
 				conn = new XMLHttpRequest();
-				conn.open('GET', '/mvcaplicado/public/marca/criar/'+dadosJSON);
+				conn.open('GET', '/mvcaplicado/public/marca/criar/'+marcaNome);
 				conn.send();
 				conn.onload = () => {
-                    carregarMarcas();
-                    setTimeout(function () {alert("Marca adicionada com sucesso!");}, 250);
+					if(conn.responseText == 1){
+						carregarMarcas();
+						setTimeout(function () {alert("Marca adicionada com sucesso!");}, 250);
+					} else {
+						alert('Marca já cadastrada!');
+					}
 				}
 			};
 		}
@@ -117,7 +116,7 @@
 			let selectCat = document.getElementById("prodCat");
 
 			var conexao = new XMLHttpRequest();
-			conexao.open('GET', '/mvcaplicado/public/categoria/listAll/<?=$data["idFuncionario"] ?>');
+			conexao.open('GET', '/mvcaplicado/public/categoria/listAll');
 			conexao.send();
 			conexao.onload = () => {
 
@@ -142,24 +141,37 @@
 					selectCat.options.remove(selectCat.lastChild);
 				}
 				catNome = prompt('Digite o nome da categoria:').replace(' ', '-');
-				dados = {
-					"idFuncionario":"<?= $data['idFuncionario'] ?>",
-					"ctgrNome":""+catNome+""
-				};
-				dadosJSON = JSON.stringify(dados);
 
 				conn = new XMLHttpRequest();
-				conn.open('GET', '/mvcaplicado/public/categoria/criar/'+dadosJSON);
+				conn.open('GET', '/mvcaplicado/public/categoria/criar/'+catNome);
 				conn.send();
 				conn.onload = () => {
-                    carregarCategorias();
-                    setTimeout(function () {alert("Categoria adicionada com sucesso!");}, 250);
+					if(conn.responseText == 1) {
+						carregarCategorias();
+						setTimeout(function () {alert("Categoria adicionada com sucesso!");}, 250);
+					} else {
+						alert('Categoria já cadastrada!');
+					}
 				}
 			};
 		}
         
 		carregarMarcas();
         carregarCategorias();
+
+		function fnBuscaCodigo(codigo) {
+			var conn = new XMLHttpRequest();
+			conn.open('GET', '/mvcaplicado/public/produto/search/'+codigo);
+			conn.send();
+
+			conn.onload = () => {
+				if(conn.responseText == 0) {
+					document.all.codeProd.value = '';
+					document.all.codeProd.placeholder = "Código existente!";
+					document.all.codeProd.focus();
+				}
+			}
+		}
 
 	</script>
 	<?php

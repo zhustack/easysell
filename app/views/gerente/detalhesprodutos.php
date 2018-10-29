@@ -59,15 +59,12 @@
                         </div>
                        <a href="/mvcaplicado/public/gerente/produto"><button type="button" class="btn btn-primary">Voltar</button></a>
                         <button type="submit" class="btn btn-primary">Salvar</button>
-                        <button type="button" class="btn btn-primary" onClick="excluirProduto(document.all.idProduto.value)">Excluir</button>
+                        <button type="button" class="btn btn-primary" onClick="deletarProd(document.all.idProduto.value)">Excluir</button>
 					</form>
 
 				</div>
 		</div>
 	</body>
-    <?php if($data['msg']) {
-        echo '<script type="text/javascript">alert("Alteração Sucedida!"); </script>';
-} ?>
 		<script type="text/javascript">
 		function carregarMarcas(){
             
@@ -170,6 +167,32 @@
 		}
 		carregarMarcas();
         carregarCategorias();
-            
+
+		function deletarProd($id) {
+			if (confirm("Você está prestes a deletar um produto, deseja continuar?")) {
+				var conexao = new XMLHttpRequest();
+				// var idProduto = parseInt(document.getElementById($id).value);
+				conexao.open('GET', '/mvcaplicado/public/produto/delete/'+$id);
+				conexao.send();
+				// location.reload(true);
+				conexao.onload = function() {
+					if(conexao.responseText == 1){
+                        location.replace('mvcaplicado/public/gerente/produto');
+				    } else {
+                        alert("Erro ao tentar excluir!");
+                    } 
+			     }
+			} else {
+				alert("Operação cancelada ;) ");
+			}
+		}
+        
 	</script>
+	<?php
+		if($data['msg'] == 1) {
+			echo "<script type='text/javascript'>alert('Alteração bem sucedida!');</script>";
+		} else if ($data['msg'] == 0) {
+			echo "<script type='text/javascript'>alert('Já existe produto com este código!');</script>";
+		}
+	?>
 </html>

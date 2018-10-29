@@ -1,38 +1,58 @@
 <?php
 
+session_start();
+
 class MarcaController extends Controller {
 	
-	public function criar($mrcJSON) {
-		$mrcArray= json_decode($mrcJSON);
-		Marca::CREATE([
-			'mrcNome' => $mrcArray->mrcNome,
-			'idFuncionario' => $mrcArray->idFuncionario,
-            'mrcStatus' => 'A'
-		]);
+	public function criar($mrcNome) {
+		
+		if(Marca::whereRaw('mrcNome = ? and idFuncionario = ? and mrcStatus = "A"', [$mrcNome, $_SESSION['dadosGerente']['idFuncionario']])->get()->count() <= 0){
+			Marca::CREATE([
+				'mrcNome' => $mrcNome,
+				'idFuncionario' => $_SESSION['dadosGerente']['idFuncionario'],
+				'mrcStatus' => 'A'
+			]);
+			echo 1;
+		} else {
+			echo 0;
+		}
 
-		// echo $ctgrArray;
 	}
 
 	public function editar($dados) {
 		$dadosA = json_decode($dados);
-		print_r($dados);
-		$marca = Marca::find($dadosA->id);
-		$marca->update([
-			'idCategoria' => $dadosA->id,
-			'mrcNome' => $dadosA->nome
-		]);
+		if(Marca::whereRaw('idFuncionario = ? and idMarca = ? and mrcStatus = "A"', [$_SESSION['dadosGerente']['idFuncionario'], $dadosA->id])->get()->count() > 0) {
+			if(Marca::whereRaw('idFuncionario = ? and mrcNome = ? and mrcStatus != "A"', [$_SESSION['dadosGerente']['idFuncionario'], $dadosA->nome])->get()->count() <= 0) {
+				$marca = Marca::find($dadosA->id);
+				$marca->update([
+					'idCategoria' => $dadosA->id,
+					'mrcNome' => $dadosA->nome
+				]);
+				
+				echo 1;
+			} else {
+				echo 0;
+			}
+		} else {
+			echo 0;
+		}
 		
 	}
 
 	public function delete($id) {
-		$marca = Marca::find($id);
-		$marca->update([
-            'mrcStatus' => 'I'
-        ]);
+		if(Marca::whereRaw('idMarca = ? and idFuncionario = ? and mrcStatus = "A"', [$id, $_SESSION['dadosGerente']['idFuncionario']])->get()->count() > 0) {
+			$marca = Marca::find($id);
+			$marca->update([
+				'mrcStatus' => 'I'
+			]);
+			echo 1;
+		} else {
+			echo 0;
+		}
 	}
 
-	public function listAll($id) {
-		$lista = Marca::whereRaw('idFuncionario = ? and mrcStatus = "A"', [$id])->get();
+	public function listAll() {
+		$lista = Marca::whereRaw('idFuncionario = ? and mrcStatus = "A"', [$_SESSION['dadosGerente']['idFuncionario']])->get();
 		echo json_encode($lista);
 	}
 
