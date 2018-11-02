@@ -128,13 +128,19 @@
 									<div class="input-group-append">
 										<span class="input-group-text espacamento"><i class="fas fa-user"></i></span>
 									</div>
-									<input class="form-control inputt" type="text" name="nomeCliente" autocomplete="off" required="required" placeholder="Nome do Cliente" />
+									<input class="form-control inputt" type="text" id="nomeCliente" name="nomeCliente" autocomplete="off" required="required" placeholder="Nome Completo" />
 								</div>
 								<div class="input-group">
 									<div class="input-group-append">
 										<span class="input-group-text espacamento"><i class="fas fa-mobile-alt"></i></i></span>
 									</div>
-									<input class="form-control inputt" type="text" name="telCliente" autocomplete="off" required="required" placeholder="Telefone do Cliente" />
+									<input class="form-control inputt" type="text" id="telCliente" name="telCliente" autocomplete="off" required="required" placeholder="Telefone" />
+								</div>
+								<div class="input-group">
+									<div class="input-group-append">
+										<span class="input-group-text espacamento"><i class="fas fa-mobile-alt"></i></i></span>
+									</div>
+									<input class="form-control inputt" type="text" id="cpfCliente" name="cpfCliente" autocomplete="off" required="required" placeholder="CPF" />
 								</div>
 							</span>
 							<span>
@@ -201,10 +207,10 @@
 		
 		function fnVerVenda(){
             const venda = new XMLHttpRequest();
-            venda.open('GET', '/mvcaplicado/public/venda/consultaAberta/'+<?= $data['idFuncionario'] ?>);
+            venda.open('GET', '/mvcaplicado/public/venda/consultaAberta/');
             venda.send();
             venda.onload = () => {
-                if(venda.responseText == false)  {
+                if(venda.responseText == 0)  {
 					fnCriarCliente();
 				} else {
 					idVenda = venda.responseText;
@@ -214,17 +220,22 @@
 
 		function fnCriarCliente(){
 			const cliente = new XMLHttpRequest();
-			cliente.open('GET', '/mvcaplicado/public/cliente/create/<?= $data["idFuncionario"] ?>');
+			cliente.open('GET', '/mvcaplicado/public/cliente/create/');
 			cliente.send();
 			cliente.onload = () => {
-				idCliente = cliente.responseText;
-				fnAbrirVenda(idCliente);
+				clienteJ = JSON.parse(cliente.responseText);
+				with(document.all) {
+					nomeCliente.value = clienteJ[0].clntNomeCompleto;
+					telCliente.value = clienteJ[0].clntTelefone;
+					cpfCliente.value = clienteJ[0].clntCpf;
+				}
+				fnAbrirVenda(clienteJ[0].idCliente);
 			}
 		}
         
 		function fnAbrirVenda(idCliente) {
 			const venda = new XMLHttpRequest();
-			venda.open('GET', '/mvcaplicado/public/venda/abrir/'+<?= $data ['idFuncionario'] ?>+'/'+idCliente);
+			venda.open('GET', '/mvcaplicado/public/venda/abrir/'+idCliente);
 			venda.send();
 			venda.onload = () => {
 				idVenda = venda.responseText;

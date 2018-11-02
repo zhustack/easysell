@@ -1,18 +1,20 @@
 <?php
 
+session_start();
+
 class ClienteController extends Controller {
     private $cliente;
 
-    public function create($idF) {
+    public function create() {
 
         $this->cliente = Cliente::create([
-            'idFuncionario' => $idF
+            'idFuncionario' => $_SESSION['dadosGerente']['idFuncionario']
         ]);
         
-        echo $this->cliente->idCliente;
+        echo json_encode(Cliente::find($this->cliente->idCliente)->get());
     }
 
-    public function index($idF) {
+    public function index() {
         
     }
 

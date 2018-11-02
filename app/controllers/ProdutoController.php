@@ -10,7 +10,7 @@ class ProdutoController extends Controller {
 	public function create() {
         extract($_POST);
 
-        if(Produto::whereRaw('prdtCodigo = ? and prdtStatus = "A"', [$codeProd])->get()->count() <= 0) {
+        if(Produto::join('Categoria', 'Produto.idCategoria', '=', 'Categoria.idCategoria')->whereRaw('prdtCodigo = ? and prdtStatus = "A" and idFuncionario = ?', [$codeProd, $_SESSION['dadosGerente']['idFuncionario']])->get()->count() <= 0) {
             Produto::CREATE([
                 'prdtCodigo' => $codeProd,
                 'prdtNome' => $prodName,
