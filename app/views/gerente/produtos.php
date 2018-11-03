@@ -6,23 +6,26 @@
 		<div class="container-fluid p-0 m-0 h-100 w-100 d-flex flex-ow">
 			<?php require_once "../app/views/common/navLateralG.php"; ?>
 			<div class="general d-flex justify-content-start align-items-center flex-column h-100 p-0">
-					<label class="display-4 bg-dark text-light rounded p-1 mt-5 mb-0">Produtos</label>
-                    <div class="input-group mb-2 mt-2 w-25">
+					<label style="font-size: 250%;" class="display-4 text-white bg-dark rounded p-1 mt-5 w-75 mb-0"><center>Produtos</center></label>
+                    <form id="searchForm" class="d-flex pl-5 w-100 align-items-start" method="get" action="/mvcaplicado/public/gerente/produto">
+                    <div style="width:32%" class="input-group ml-1 mt-4">
                         <div class="input-group-prepend">
                             <span class="input-group-text">#</span>
                         </div>
-                        <form id="searchForm" method="get" action="/mvcaplicado/public/gerente/produto">
                             <input id="searchprod" name="searchprod" list="listCodigos" type="text" class="form-control" placeholder="Código do Produto" autocomplete="off">
-                        
+                            <div class="input-group-append">
+                                <span class="input-group-text btn-defaultOur"><a style="	text-decoration: none;
+	color: #fff;" href="/mvcaplicado/public/gerente/produto">Listar Todos</a></span>
+                            </div>
                         <datalist id="listCodigos">
                             <?php foreach($data['produtos'] as $produto){ ?>
                                 <option value="<?= $produto['prdtCodigo']; ?>">
                             <?php } ?>
                         </datalist>
-                        </form>
-                        <a href="/mvcaplicado/public/gerente/produto"><button class="btn-defaultOur rounded">Listar</button></a>
+                        
                     </div>
-					<table id="tblProdutos" class="table table-striped mt-3 tabelaProdutos">
+                    </form>
+					<table id="tblProdutos" class="table table-striped mt-2 tabelaProdutos">
 						<thead class="thead text-light" style="background-color: #222">
 							<tr>
 								<th scope="col">Código</th>
@@ -195,7 +198,7 @@
                 if(conexao.responseText == 1) {
 		 		    location.reload(true);
                 } else {
-                    alert('Error');
+                    alert('Código já existente!');
                 }
 		 		// console.log(conexao.responseText);
 		 	}

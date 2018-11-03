@@ -23,7 +23,7 @@ class CategoriaController extends Controller {
 	public function editar($dados) {
 		$dadosA = json_decode($dados);
 		if(Categoria::whereRaw('idFuncionario = ? and idCategoria = ? and ctgrStatus = "A"', [$_SESSION['dadosGerente']['idFuncionario'], $dadosA->id])->get()->count() > 0) {
-			if(Categoria::whereRaw('idFuncionario = ? and ctgrNome = ? and ctgrStatus != "A"', [$_SESSION['dadosGerente']['idFuncionario'], $dadosA->nome])->get()->count() <= 0) {
+			if(Categoria::whereRaw('idFuncionario = ? and ctgrNome = ? and ctgrStatus = "A"', [$_SESSION['dadosGerente']['idFuncionario'], $dadosA->nome])->get()->count() <= 0) {
 				$categoria = Categoria::find($dadosA->id);
 				$categoria->update([
 					'idCategoria' => $dadosA->id,

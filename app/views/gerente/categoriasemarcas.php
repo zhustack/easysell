@@ -7,7 +7,7 @@
 			<?php require_once "../app/views/common/navLateralG.php"; ?>
 			<div class="general d-flex justify-content-center align-items-center flex-row h-100 p-0">
 				<div class="blocoCategoria">
-					<label class="display-4 bg-dark text-light rounded p-1 mt-5 mb-0">Categorias</label>
+					<label style="width:90%" class="display-4 bg-dark text-light rounded p-1 mt-5 mb-0">Categorias</label>
 					<table class="table table-striped mt-3">
 						<thead class="thead text-light" style="background-color: #222">
 							<tr>
@@ -42,7 +42,7 @@
 						</table>
 					</div>
 					<div class="blocoCategoria">
-						<label class="display-4 bg-dark text-light rounded p-1 mt-5 mb-0">Marcas</label>
+						<label style="width:90%" class="display-4 bg-dark text-light rounded p-1 mt-5 mb-0">Marcas</label>
 						<table class="table table-striped mt-3">
 							<thead class="thead text-light" style="background-color: #222">
 								<tr>
@@ -140,6 +140,9 @@
 					location.reload(true);
 				}else {
 					alert('Não foi possível alterar o nome da categoria!');
+					// let placeholder = document.getElementById(id +"nomeCategoria").value;
+					// document.getElementById(id +"nomeCategoria").value = '';
+					// document.getElementById(id +"nomeCategoria").placeholder = placeholder;
 					document.getElementById(id +"nomeCategoria").focus();
 				}
 

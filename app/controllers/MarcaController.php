@@ -22,7 +22,7 @@ class MarcaController extends Controller {
 	public function editar($dados) {
 		$dadosA = json_decode($dados);
 		if(Marca::whereRaw('idFuncionario = ? and idMarca = ? and mrcStatus = "A"', [$_SESSION['dadosGerente']['idFuncionario'], $dadosA->id])->get()->count() > 0) {
-			if(Marca::whereRaw('idFuncionario = ? and mrcNome = ? and mrcStatus != "A"', [$_SESSION['dadosGerente']['idFuncionario'], $dadosA->nome])->get()->count() <= 0) {
+			if(Marca::whereRaw('idFuncionario = ? and mrcNome = ? and mrcStatus = "A"', [$_SESSION['dadosGerente']['idFuncionario'], $dadosA->nome])->get()->count() <= 0) {
 				$marca = Marca::find($dadosA->id);
 				$marca->update([
 					'idCategoria' => $dadosA->id,

@@ -10,19 +10,6 @@
 						<div class="painelEsquerdo">
 							<span>
 								<label class="text-center display-4 rounded-top bg-dark text-light p-1 mb-0 ">Selecione um produto</label>
-								<!--<select name="selectProdVenda" id="selectProdVenda" onchange ="selecionaProdutos()" class="form-control">
-									<option value="" selected disabled>Selecionar</option>
-									<?php /*
-										$listaProdutos = listaProd("");
-										foreach ($listaProdutos as $produtos) {
-									?>
-									<option value="<?php echo $produtos['idProduto'];?>">
-										<?php echo $produtos['codProd']; ?>&nbsp &nbsp &nbsp <?php echo $produtos['nome'];?> 		
-									</option>
-									<?php
-										} */
-									?>
-								</select> -->
 							</span>
 							<div class="input-group">
 								<div class="input-group-prepend">
@@ -57,7 +44,7 @@
 									<span class="input-group-text espacamento">
 									<i class="fas fa-shopping-bag"></i></span>
 								</div>
-								<input onblur="fazTotal()" class="form-control inputt" id="qtdeItem" type="number" name="qtdProdVenda" value="1" />
+								<input onblur="fazTotal()" class="form-control inputt" id="qtdeItem" type="number" name="qtdProdVenda" min-value="1" min="1" value="1" />
 							</div>
 							<div class="input-group">
 								<div class="input-group-prepend">
@@ -121,7 +108,7 @@
 						
 					</div>
 					<div class="painelDireito">
-						<form action="" method = "post">
+						<!-- <form action="" method = "post"> -->
 							<span class="dadosCliente mb-3">
 								<label class="display-4 text-center bg-dark text-light rounded p-1 mb-0">Dados do Cliente</label>
 								<div class="input-group">
@@ -140,35 +127,41 @@
 									<div class="input-group-append">
 										<span class="input-group-text espacamento"><i class="fas fa-mobile-alt"></i></i></span>
 									</div>
-									<input class="form-control inputt" type="text" id="cpfCliente" name="cpfCliente" autocomplete="off" required="required" placeholder="CPF" />
+									<input class="form-control" type="text" id="cpfCliente" name="cpfCliente" autocomplete="off" required="required" placeholder="CPF" />
 								</div>
 							</span>
 							<span>
 								<label class="display-4 text-center bg-dark text-light rounded p-1 mb-0">Dados da Venda</label>
-								<span class="flex-row align-items-center justify-content-center bg-white">
-									<input class="inputt" type="radio" name="pago" value="s" checked ><label class="mr-3">À vista</label>
-									<input class="inputt" type="radio" name="pago" value="n"><label class="mr-5">À prazo</label>
-								</span>
-								<span id="alinhamento" >
-									<div class="input-group w-100">
-										<div class="input-group-append">
-											<span class="input-group-text espacamento"><i class="fas fa-calendar-alt"></i></span>
-										</div>
-									<input class="inputt form-control rounded" type="date" name="dataVenda">
-									</div>
-								<?php
-									/*conectar();
-									query("select sum(subTotal) from item where idVendedor = {$_SESSION['idVendedor']} and status = 're'");
-									$total = arrayBD();*/
+								<span class="flex-column align-items-start justify-content-center">
 
-								?>
-									<div class="input-group w-100">
+									<!-- <input class="inputt" type="radio" name="pago" value="V" checked ><label class="mr-3">À vista</label>
+									<input class="inputt" type="radio" name="pago" value="P"><label class="mr-5">À prazo</label> -->
+									
+									<div id="divParcelas" class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text espacamento" for="vndParcelas"><i class="fas fa-credit-card"></i></span>
+										</div>
+										<select class="custom-select" id="vndParcelas">
+											<option disabled>Parcelas</option>
+											<option selected value="1">1x</option>
+											<option value="2">2x</option>
+											<option value="3">3x</option>
+										</select>
+										<input type="text" class ="form-control" name="vndValorParcela" id="vndValorParcela" placeholder="Valor da Parcela" readonly />
+									</div>
+									
+									<div class="input-group w-50">
+										<div class="input-group-append">
+											<span class="input-group-text espacamento"><i class="fas fa-cart-arrow-down"></i></span>
+										</div>
+										<input class="form-control inputt" type="text" name="vndDesconto" id="vndDesconto" placeholder="Desconto"/>
+									</div>
+									<div class="input-group w-50">
 										<div class="input-group-append">
 											<span class="input-group-text espacamento"><i class="fas fa-cart-plus"></i></span>
 										</div>
-										<input class="form-control inputt" type="text" name="valorTotal" value="" placeholder="Total"/>
+										<input class="form-control inputt" type="text" id="vndValorTotal" name="vndValorTotal" value="" placeholder="Total" readonly/>
 									</div>
-								</span>
 							</span>
 							<span class="botoesSobreVenda d-flex flex-row">
 								<button type="submit" onload="location.reload(true)" class="btn btn-defaultOur" name="btnFinalizar">Finalizar
@@ -176,7 +169,7 @@
 							</span>
 							
 								
-						</form>
+						<!-- </form> -->
 						<?php
 							/*if(isset($_POST['btnFinalizar'])) {
 								if(existeCliente($_POST['telCliente']) <=0) {
@@ -200,8 +193,14 @@
         </div>
     </body>
     <script>
-		var idCliente;
-		var idVenda;
+		var 
+			idCliente, 
+			idVenda,
+			idProduto, 
+			prdtCodigo, 
+			prdtNome, 
+			prdtValor,
+			nItemInicial;
 
 		document.body.onload = fnVerVenda();
 		
@@ -239,20 +238,20 @@
 			venda.send();
 			venda.onload = () => {
 				idVenda = venda.responseText;
-				// console.log(idVenda);
 			}
 		}
-		var idProduto, prdtCodigo, prdtNome, prdtValor;
 
         function carregaProduto(codigo) {
+			
 			var bFind;
 
 			for(i=0;i < document.all.listCodigos.children.length; i++) {
 				if( codigo == document.all.listCodigos.children[i].value ) {
 					bFind = true;
-				} else {
-					bFind = false;
+					break;
 				}
+
+				bFind = false;
 			}
 
             if(bFind == true){
@@ -285,14 +284,21 @@
 
 			let tabela = document.all.eTblItem;
 
-			if(fnCountItens(prdtCodigo)) {
-				tabela.insertAdjacentHTML("beforeend", "<tr id='"+Math.random()+"'><td class='tdCodigo'>" + prdtCodigo + "</td><td>" + prdtNome + "</td><td onclick='fnGetItem(this)' onblur='fnSoma(nItemInicial,this.innerText, this.nextElementSibling)' contentEditable='true'>" + document.all.qtdeItem.value + "</td><td>" + document.getElementById('valorTotal').value + "</td></tr>");
+			if(fnCountItens(parseInt(prdtCodigo)) == -1) {
 				const conexao = new XMLHttpRequest();
 				conexao.open('GET','/mvcaplicado/public/item/create/'+idProduto+'/'+document.all.qtdeItem.value+'/'+idVenda);
 				conexao.send();
-				fnLimpaCampoItem();
+				conexao.onload = () => {
+					// alert(conexao.responseText);
+					tabela.insertAdjacentHTML("beforeend", "<tr id='"+conexao.responseText+"'><td class='tdCodigo'>" + prdtCodigo + "</td><td>" + prdtNome + "</td><td onclick='fnGetItem(this)' onblur='fnSoma(nItemInicial,this, this.nextElementSibling)' contentEditable='true'>" + document.all.qtdeItem.value + "</td><td class='subtotal'>" + document.getElementById('valorTotal').value + "</td><td><i onClick='fnDeletaItem()' class='fas fa-trash-alt'></i></td></tr>");
+					fnLimpaCampoItem();
+					fnValorTotal();
+					if(document.all.vndParcelas.value == 1){			
+						document.all.vndValorParcela.value = document.all.vndValorTotal.value;
+					}
+				}
 			} else {
-				alert('Item já adicionado! \nAltera a quantidade na lista de itens!');
+				alert('Item já adicionado! \nAltere a quantidade na lista de itens!');
 				fnLimpaCampoItem();
 			}
 
@@ -301,29 +307,36 @@
 		function fnCountItens(nCodigo) {
 			let tdCodigo = document.getElementsByClassName('tdCodigo');
 			if(tdCodigo.length > 0){
-				for (i = 0;i < tdCodigo.length; i++) {
+				for (i = 0;i <= tdCodigo.length; i++) {
 					if(nCodigo == tdCodigo[i].innerText) {
 						return i;
 					}
 
-					return true;
+					return -1;
 				}
 			} 
 
-			return true;
+			return -1;
 		}
-		
-		var nItemInicial;
 
 		function fnGetItem(nV) {
 			nItemInicial = nV.innerText;
 			nEInicial = nV;
 		}
 
-		function fnSoma(nV, nQtdeItem,  nVtotal) {
+		function fnSoma(nV, element,  nVtotal) {
+			nQtdeItem = element.innerText;
+			idItem = element.parentElement.id;
 			if(nQtdeItem != 0){
 				nUnitario = parseFloat(nVtotal.innerText) / parseFloat(nV);
 				nVtotal.innerText = (parseFloat(nUnitario) * parseFloat(nQtdeItem)).toFixed(2);
+				fnValorTotal();
+				conn = new XMLHttpRequest();
+				conn.open('GET', '/mvcaplicado/public/item/updateQuant/'+nQtdeItem+'/'+idItem);
+				conn.send();
+				if(document.all.vndParcelas.value == 1){			
+						document.all.vndValorParcela.value = document.all.vndValorTotal.value;
+				}
 			} else {
 				// alert('Insira um valor válido!');
 				nEInicial.focus();	
@@ -335,8 +348,23 @@
 			document.all.prdtNome.value = "";
 			document.all.prdtValor.value = "";
 			document.all.prdtCodigo.value = "";
-			document.all.valorTotal[0].value = "";
+			document.all.valorTotal.value = "";
+		}
+
+		function fnValorTotal() {
+			let total = 0, subtotais = document.getElementsByClassName('subtotal');
+
+			for(i = 0; i < subtotais.length; i++) {
+				total = total + parseFloat(subtotais[i].innerText);
+			}
+
+			document.all.vndValorTotal.value = total.toFixed(2);
+
 		}
         
+		document.all.vndParcelas.onchange = () => {
+			document.all.vndValorParcela.value = (document.all.vndValorTotal.value / document.all.vndParcelas.value).toFixed(2);
+		}
+
     </script>
 </html>

@@ -8,9 +8,8 @@
 				<div class="general h-100 d-flex flex-column justify-content-start align-items-center">
 					<form class="w-50" method="post" action="/mvcaplicado/public/produto/create/">
 
-						<center><label class="display-4 bg-dark text-light rounded p-1 mt-5 mb-3">Cadastrar</label><center></center>
+						<center><label class="display-4 bg-dark text-light rounded p-1 mt-5 mb-3 w-100">Cadastrar</label></center>
 
-						
 						<div class="input-group input-group-lg mb-2">
 							<div class="input-group-prepend">
 							<div class="input-group-text">#</div>
@@ -95,18 +94,24 @@
                 for (i = 0; i < inicial; i++) {
 					selectMarca.options.remove(selectMarca.lastChild);
 				}
-				marcaNome = prompt('Digite o nome da marca:').replace(' ', '-');
 
-				conn = new XMLHttpRequest();
-				conn.open('GET', '/mvcaplicado/public/marca/criar/'+marcaNome);
-				conn.send();
-				conn.onload = () => {
-					if(conn.responseText == 1){
-						carregarMarcas();
-						setTimeout(function () {alert("Marca adicionada com sucesso!");}, 250);
-					} else {
-						alert('Marca já cadastrada!');
+				marcaNome = prompt('Digite o nome da marca:');
+				if(marcaNome != null && marcaNome != '') {
+
+					conn = new XMLHttpRequest();
+					conn.open('GET', '/mvcaplicado/public/marca/criar/'+marcaNome.replace(' ', '-'));
+					conn.send();
+					conn.onload = () => {
+						if(conn.responseText == 1){
+							carregarMarcas();
+							setTimeout(function () {alert("Marca adicionada com sucesso!");}, 250);
+						} else {
+							carregarMarcas();
+							alert('Marca já cadastrada!');
+						}
 					}
+				} else {
+					carregarMarcas();
 				}
 			};
 		}
@@ -140,19 +145,28 @@
                 for (i = 0; i < inicial; i++) {
 					selectCat.options.remove(selectCat.lastChild);
 				}
-				catNome = prompt('Digite o nome da categoria:').replace(' ', '-');
+				
+				catNome = prompt('Digite o nome da categoria:');
 
-				conn = new XMLHttpRequest();
-				conn.open('GET', '/mvcaplicado/public/categoria/criar/'+catNome);
-				conn.send();
-				conn.onload = () => {
-					if(conn.responseText == 1) {
-						carregarCategorias();
-						setTimeout(function () {alert("Categoria adicionada com sucesso!");}, 250);
-					} else {
-						alert('Categoria já cadastrada!');
+				if(catNome != null && catNome != '') {
+					conn = new XMLHttpRequest();
+					conn.open('GET', '/mvcaplicado/public/categoria/criar/'+catNome.replace(' ', '-'));
+					conn.send();
+					conn.onload = () => {
+						if(conn.responseText == 1) {
+							carregarCategorias();
+							setTimeout(function () {alert("Categoria adicionada com sucesso!");}, 250);
+						} else {
+							carregarCategorias();
+							alert('Categoria já cadastrada!');
+						}
 					}
+				} else {
+					carregarCategorias();
 				}
+				
+				
+
 			};
 		}
         

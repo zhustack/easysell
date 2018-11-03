@@ -7,7 +7,7 @@
 				<div class="general h-100 d-flex flex-column justify-content-start align-items-center">
 					<form class="w-50 detalhesProduto" method="post" action="/mvcaplicado/public/produto/editar">
 
-						<center><label class="display-4 bg-dark text-light rounded p-1 mt-5 mb-3">Detalhes</label><center></center>
+						<center><label class="display-4 bg-dark text-light rounded p-1 mt-5 w-100 mb-3">Detalhes</label><center></center>
 						<input type="hidden" name="idProduto" id="idProduto" value="<?= $data['produto']['0']['idProduto']?>">
 						<div class="input-group input-group-lg mb-2">
 							<div class="input-group-prepend">
@@ -100,18 +100,18 @@
 					selectMarca.options.remove(selectMarca.lastChild);
 				}
 				marcaNome = prompt('Digite o nome da marca:').replace(' ', '-');
-				dados = {
-					"idFuncionario":"<?= $data['idFuncionario'] ?>",
-					"mrcNome":""+marcaNome+""
-				};
-				dadosJSON = JSON.stringify(dados);
 
 				conn = new XMLHttpRequest();
-				conn.open('GET', '/mvcaplicado/public/marca/criar/'+dadosJSON);
+				conn.open('GET', '/mvcaplicado/public/marca/criar/'+marcaNome);
 				conn.send();
 				conn.onload = () => {
-                    carregarMarcas();
-                    setTimeout(function () {alert("Marca adicionada com sucesso!");}, 250);
+					if(conn.responseText == 1) {
+						carregarMarcas();
+						setTimeout(function () {alert("Marca adicionada com sucesso!");}, 250);
+					} else {
+						carregarMarcas();
+						alert('Marca já cadastrada!');
+					}
 				}
 			} 
 		}
@@ -150,18 +150,18 @@
 					selectCat.options.remove(selectCat.lastChild);
 				}
 				catNome = prompt('Digite o nome da categoria:').replace(' ', '-');
-				dados = {
-					"idFuncionario":"<?= $data['idFuncionario'] ?>",
-					"ctgrNome":""+catNome+""
-				};
-				dadosJSON = JSON.stringify(dados);
 
 				conn = new XMLHttpRequest();
-				conn.open('GET', '/mvcaplicado/public/categoria/criar/'+dadosJSON);
+				conn.open('GET', '/mvcaplicado/public/categoria/criar/'+catNome);
 				conn.send();
 				conn.onload = () => {
-                    carregarCategorias();
-                    setTimeout(function () {alert("Categoria adicionada com sucesso!");}, 250);
+					if(conn.responseText == 1) {
+						carregarCategorias();
+						setTimeout(function () {alert("Categoria adicionada com sucesso!");}, 250);
+					} else {
+						carregarCategorias();
+						alert('Categoria já cadastrada!');
+					}
 				}
 			};
 		}
@@ -192,7 +192,7 @@
 		if($data['msg'] == 1) {
 			echo "<script type='text/javascript'>alert('Alteração bem sucedida!');</script>";
 		} else if ($data['msg'] == 0) {
-			echo "<script type='text/javascript'>alert('Já existe produto com este código!');</script>";
+			echo "<script type='text/javascript'>alert('Já existe produto com este código!'); document.all.codeProd.readOnly = false; document.all.codeProd.value = '';document.all.codeProd.focus();</script>";
 		}
 	?>
 </html>
