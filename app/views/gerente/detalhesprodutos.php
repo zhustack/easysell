@@ -13,7 +13,7 @@
 							<div class="input-group-prepend">
 							<div class="input-group-text">#</div>
 							</div>
-							<input onDblClick="ativaInput(this.id)" type="text" class="form-control" id="codeProd" name="codeProd" placeholder="Código do Produto" value="<?= $data['produto'][0]['prdtCodigo']; ?>" readonly required>
+							<input onDblClick="ativaInput(this.id);" onclick="()=>{codigoInical = this.value;}" type="text" class="form-control" id="codeProd" name="codeProd" onblur="fnBuscaCodigo(this.value)" placeholder="Código do Produto" value="<?= $data['produto'][0]['prdtCodigo']; ?>" readonly required>
 						</div>
 
 						<div class="input-group input-group-lg mb-2">
@@ -66,6 +66,8 @@
 		</div>
 	</body>
 		<script type="text/javascript">
+		var codigoInicial;
+
 		function carregarMarcas(){
             
 			let selectMarca = document.getElementById("prodMarc");
@@ -184,6 +186,22 @@
 			     }
 			} else {
 				alert("Operação cancelada ;) ");
+			}
+		}
+
+		function fnBuscaCodigo(codigo) {
+			if(codigo != codigoInicial) {
+				var conn = new XMLHttpRequest();
+				conn.open('GET', '/mvcaplicado/public/produto/search/'+codigo);
+				conn.send();
+
+				conn.onload = () => {
+					if(conn.responseText == 0) {
+						document.all.codeProd.value = '';
+						document.all.codeProd.placeholder = "Código existente!";
+						document.all.codeProd.focus();
+					}
+				}
 			}
 		}
         

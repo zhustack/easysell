@@ -19,7 +19,7 @@
 			<a class="nav-link" href="/mvcaplicado/public/gerente/funcionario"><button class="btn-lg btn-defaultOur dropdown-btn">Equipe</button></a>
 		</li>
 		<li class="nav-item">
-			<a class="nav-link" href="/mvcaplicado/public/gerente/funcionario"><button class="btn-lg btn-defaultOur dropdown-btn">Configurações</button></a><br>
+			<a class="nav-link" href="/mvcaplicado/public/gerente/configuracoes"><button class="btn-lg btn-defaultOur dropdown-btn">Configurações</button></a><br>
 		</li>
 		<li class="nav-item d-flex justify-content-end pr-4">
 			<a href="/mvcaplicado/public/gerente/index"><button class="btn-defaultOur mr-3 rounded" style="width: 4em;">Home</button></a>

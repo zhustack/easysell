@@ -48,7 +48,7 @@
                             
 										<input type="hidden" id="<?= $produto['idProduto']."idProduto" ?>" class="form-control" name="idProduto" value="<?=$produto['idProduto']?>">
 										<td>
-                                            <input type="text" id="<?= $produto['idProduto']."produtoCodigo" ?>" class="form-control form-control-sm" name="produtoCodigo" value="<?= str_replace('-', ' ', $produto['prdtCodigo']) ?>" ondblclick="ativaInput(this.id)" readonly/>
+                                            <input type="text" id="<?= $produto['idProduto']."produtoCodigo" ?>" class="form-control form-control-sm" name="produtoCodigo" onblur="fnBuscaCodigo(this)" value="<?= str_replace('-', ' ', $produto['prdtCodigo']) ?>" ondblclick="ativaInput(this.id)" readonly/>
                                         </td>
                                         <td>
                                             <input type="text" id="<?= $produto['idProduto']."produtoNome" ?>" class="form-control form-control-sm" name="produtoNome" value="<?= str_replace('-', ' ', $produto['prdtNome']) ?>" ondblclick="ativaInput(this.id)" readonly/>
@@ -221,6 +221,21 @@
 			     }
 			} else {
 				alert("Operação cancelada ;) ");
+			}
+		}
+
+        function fnBuscaCodigo(element) {
+            codigo = element.value;
+			var conn = new XMLHttpRequest();
+			conn.open('GET', '/mvcaplicado/public/produto/search/'+codigo);
+			conn.send();
+
+			conn.onload = () => {
+				if(conn.responseText == 0) {
+					element.value = '';
+					element.placeholder = "Código existente!";
+					element.focus();
+				}
 			}
 		}
         

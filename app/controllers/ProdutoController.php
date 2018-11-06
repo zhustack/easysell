@@ -51,7 +51,6 @@ class ProdutoController extends Controller {
         if($dados == '') {
             extract($_POST);
 
-            if(Produto::join('categoria', 'Produto.idCategoria', '=', 'Categoria.idCategoria')->whereRaw('prdtStatus = "A" and idFuncionario = ? and prdtCodigo = ?', [$_SESSION['dadosGerente']['idFuncionario'], $codeProd])->get()->count() <= 0){
                 $produto = Produto::find($idProduto);
                 $produto->update([
                     'prdtCodigo' => $codeProd,
@@ -63,13 +62,11 @@ class ProdutoController extends Controller {
                     'idMarca' => $prodMarc 
                 ]);
                 $_SESSION['prdtSucess'] = 1;
-            } else {
-                $_SESSION['prdtSucess'] = 0;
-            }
+
             header('location: /mvcaplicado/public/gerente/produto/detalhes/'.$idProduto.'');
         } else {
             $dadosArray = json_decode($dados);
-            if(Produto::join('categoria', 'Produto.idCategoria', '=', 'Categoria.idCategoria')->whereRaw('prdtStatus = "A" and idFuncionario = ? and prdtCodigo = ?', [$_SESSION['dadosGerente']['idFuncionario'], $dadosArray->codigo])->get()->count() <= 0){
+        
                 $produto = Produto::find($dadosArray->id);
                 $produto->update([
                     'prdtCodigo' => $dadosArray->codigo,
@@ -81,9 +78,7 @@ class ProdutoController extends Controller {
                 ]);
 
                 echo 1;
-            } else {
-                echo 0;
-            }
+
         }
         
         // header('location: /mvcaplicado/public/gerente/produto/detalhes/'.$idProduto.'/sucess');

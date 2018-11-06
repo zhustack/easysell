@@ -8,7 +8,7 @@ class GerenteController extends Controller
 	
 	public function __construct(){
 		if (session_status() == '2' && isset($_SESSION['dadosGerente'])) {
-			$this->gerente = $_SESSION['dadosGerente'];
+			$this->gerente = Gerente::find($_SESSION['dadosGerente']['idFuncionario'])->toArray();
 		} else {
 			header('Location: /mvcaplicado/public/home/index');
 		}
@@ -144,6 +144,39 @@ class GerenteController extends Controller
                    
                    );
     }
+
+    public function configuracoes(){
+        
+        if(isset($_POST['idGerente'])) {
+            extract($_POST);
+            
+        //    if(Funcionario::whereRaw('fEmail = ?', [$fEmail])->get()->count() <= 0) {
+                $fFoto = $this->nomeArquivo();
+               Gerente::find($idGerente)->update([
+                'fNome' => $fNome, 
+                'fSobrenome' => $fSobrenome,
+                'fDataNasc' => $fDataNasc,
+                'fFoto' => $fFoto,
+                'fEmail' => $fEmail,
+                'fSenha' => $fSenha != '' ? $fSenha: $this->gerente['fSenha']
+               ]);
+
+               $this->salvarArquivo($fFoto);
+               $this->gerente = Gerente::find($idGerente)->toArray();
+            //    $this->gerente = $_SESSION['dadosGerente'];
+                // header('Location: /mvcaplicado/public/gerente/configuracoes')
+        //    }
+
+        }
+        $this->view('gerente/configuracoes',
+        [
+            'titlePage' => "Configurações",
+            'nomeGerente' => $this->gerente['fNome'],
+            'imgPerfil' => $this->gerente['fFoto'], 
+            'dadosFuncionario' => $this->gerente
+    ]);
+       
+    }
     
     public function showParams($params=""){
         echo $params;
@@ -152,5 +185,22 @@ class GerenteController extends Controller
 	public function destruir(){
 		session_destroy();
         header('Location: index');
+    }
+    
+    private function salvarArquivo( $nomeArquivo ) {
+		$arquivo = $_FILES['fFoto']['tmp_name'];
+		return move_uploaded_file ( $arquivo, "C:\wamp64\www\mvcaplicado\public\assets\imgsBanco\\$nomeArquivo");
+	}
+
+	private function nomeArquivo() {
+		if ( isset($_FILES['fFoto']) && $_FILES['fFoto']['name'] != 'default.png') {
+			$nome = $_FILES['fFoto']['name'];
+			$arrayArquivo = explode('.', $nome);
+			$extensao = $arrayArquivo[1];
+
+			return microtime() . rand() . '.' . $extensao;
+		} else {
+			return "default.png";
+		}
 	}
 }
