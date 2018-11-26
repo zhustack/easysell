@@ -26,8 +26,8 @@
 }
 
 .navLateralGerente img {
-	height: 10em;
-	width: 10em;
+	height: 8.5em;
+	width: 8.5em;
 	border-radius: 100%;
 }
 
@@ -72,11 +72,17 @@
 .blocoFuncionalidade a{
 	height: 75%;
 	width: 33%;
-	margin: 0.5em; 
+	margin: 1.5em; 
 	text-decoration: none; !important
 }
 
+.funcionalidadeGerente:hover {
+	box-shadow: 0px 0px 10px black;
+	transition: 0.5s;
+}
+
 .funcionalidadeGerente {
+	transition: 0.5s;
 	height: 100%;
 	width: 100%;
 	/*margin: 0.5em; */
@@ -85,6 +91,10 @@
 	justify-content: center;
 	align-items: center;
 	background-color: #222; !important
+}
+
+.funcionalidadeGerente label {
+	color: #aaa;
 }
 
 .funcionalidadeGerente i {

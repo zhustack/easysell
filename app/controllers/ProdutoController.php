@@ -10,7 +10,7 @@ class ProdutoController extends Controller {
 	public function create() {
         extract($_POST);
 
-        if(Produto::join('Categoria', 'Produto.idCategoria', '=', 'Categoria.idCategoria')->whereRaw('prdtCodigo = ? and prdtStatus = "A" and idFuncionario = ?', [$codeProd, $_SESSION['dadosGerente']['idFuncionario']])->get()->count() <= 0) {
+        if(Produto::join('Categoria', 'Produto.idCategoria', '=', 'Categoria.idCategoria')->whereRaw('prdtCodigo = ? and prdtStatus = "A" and idFuncionario = ?', [$codeProd, $_SESSION['dados']['idFuncionario']])->get()->count() <= 0) {
             Produto::CREATE([
                 'prdtCodigo' => $codeProd,
                 'prdtNome' => $prodName,
@@ -31,8 +31,8 @@ class ProdutoController extends Controller {
 	}
     
     public function show($idP) {
-        if(isset($_SESSION['dadosGerente'])) {
-            $produtoDetails = Produto::join('Categoria', 'Produto.idCategoria', '=', 'Categoria.idCategoria')->join('Marca','Produto.idMarca','=','Marca.idMarca')->whereRaw('prdtStatus = "A" and Categoria.idFuncionario = ? and (idProduto = ? or prdtCodigo = ?)', [$_SESSION['dadosGerente']['idFuncionario'], $idP, $idP])->get()->toArray();
+        if(isset($_SESSION['dados'])) {
+            $produtoDetails = Produto::join('Categoria', 'Produto.idCategoria', '=', 'Categoria.idCategoria')->join('Marca','Produto.idMarca','=','Marca.idMarca')->whereRaw('prdtStatus = "A" and Categoria.idFuncionario = ? and (idProduto = ? or prdtCodigo = ?)', [$_SESSION['dados']['idFuncionario'], $idP, $idP])->get()->toArray();
             echo json_encode($produtoDetails);
         } else {
             echo 0;
@@ -40,7 +40,7 @@ class ProdutoController extends Controller {
     }
 
     public function search($codigo) {
-        if(Produto::join('Categoria', 'Produto.idCategoria', '=', 'Categoria.idCategoria')->whereRaw('prdtStatus = "A" and Categoria.idFuncionario = ? and prdtCodigo = ?', [$_SESSION['dadosGerente']['idFuncionario'], $codigo])->get()->count() > 0){
+        if(Produto::join('Categoria', 'Produto.idCategoria', '=', 'Categoria.idCategoria')->whereRaw('prdtStatus = "A" and Categoria.idFuncionario = ? and prdtCodigo = ?', [$_SESSION['dados']['idFuncionario'], $codigo])->get()->count() > 0){
             echo 0;
         } else {
             echo 1;
@@ -85,7 +85,7 @@ class ProdutoController extends Controller {
     }
     
     public function delete($id) {
-        if(Produto::join('categoria', 'Produto.idCategoria', '=', 'Categoria.idCategoria')->whereRaw('prdtStatus = "A" and idFuncionario = ? and idProduto = ?', [$_SESSION['dadosGerente']['idFuncionario'], $id])->get()->count() > 0){
+        if(Produto::join('categoria', 'Produto.idCategoria', '=', 'Categoria.idCategoria')->whereRaw('prdtStatus = "A" and idFuncionario = ? and idProduto = ?', [$_SESSION['dados']['idFuncionario'], $id])->get()->count() > 0){
             $produto = Produto::find($id);
             $produto->update([
                 'prdtStatus' => 'I'

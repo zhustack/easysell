@@ -55,7 +55,7 @@
 								
 								
 							</div>
-							<button name="addItem" onClick="fnAddItem()" class="btn btn-defaultOur" value="btn">Adicionar Item</button>
+							<button name="addItem" onClick="fnAddItem(parseInt(document.all.prdtCodigo.value))" class="btn btn-defaultOur" value="btn">Adicionar Item</button>
 						<?php
 						/*
 						if (pegaUltimoID() <=0) {
@@ -108,9 +108,11 @@
 						
 					</div>
 					<div class="painelDireito">
-						<!-- <form action="" method = "post"> -->
+						<form action="/mvcaplicado/public/venda/finalizar" method="post">
 							<span class="dadosCliente mb-3">
 								<label class="display-4 text-center bg-dark text-light rounded p-1 mb-0">Dados do Cliente</label>
+								<input type="hidden" name="idVenda" id="idVenda" />
+								<input type="hidden" id="idCliente" name="idCliente" />
 								<div class="input-group">
 									<div class="input-group-append">
 										<span class="input-group-text espacamento"><i class="fas fa-user"></i></span>
@@ -141,7 +143,7 @@
 										<div class="input-group-prepend">
 											<span class="input-group-text espacamento" for="vndParcelas"><i class="fas fa-credit-card"></i></span>
 										</div>
-										<select class="custom-select" id="vndParcelas">
+										<select class="custom-select" id="vndParcelas" name="vndParcelas">
 											<option disabled>Parcelas</option>
 											<option selected value="1">1x</option>
 											<option value="2">2x</option>
@@ -164,10 +166,10 @@
 									</div>
 							</span>
 							<span class="botoesSobreVenda d-flex flex-row">
-								<button type="submit" onload="location.reload(true)" class="btn btn-defaultOur" name="btnFinalizar">Finalizar
+								<button type="submit" class="btn btn-defaultOur" name="btnFinalizar">Finalizar
 								</button>
 							</span>
-							
+						</form>
 								
 						<!-- </form> -->
 						<?php
@@ -213,6 +215,7 @@
 					fnCriarCliente();
 				} else {
 					idVenda = venda.responseText;
+					document.all.idVenda.value = idVenda;
 				}
             }
         }
@@ -224,6 +227,7 @@
 			cliente.onload = () => {
 				clienteJ = JSON.parse(cliente.responseText);
 				with(document.all) {
+					idCliente.value = clienteJ[0].idCliente;
 					nomeCliente.value = clienteJ[0].clntNomeCompleto;
 					telCliente.value = clienteJ[0].clntTelefone;
 					cpfCliente.value = clienteJ[0].clntCpf;
@@ -238,6 +242,7 @@
 			venda.send();
 			venda.onload = () => {
 				idVenda = venda.responseText;
+				document.all.idVenda.value = idVenda;
 			}
 		}
 
@@ -263,7 +268,7 @@
 					idProduto = document.all.idProduto.value = produto[0].idProduto;
 					prdtNome = document.all.prdtNome.value = produto[0].prdtNome.replace('-',' ').replace('-',' ');
 					prdtValor = document.all.prdtValor.value = produto[0].prdtValor;
-					prdtCodigo = codigo;
+					prdtCodigo = parseInt(codigo);
 
 					document.all.qtdeItem.focus();
 				}
@@ -280,11 +285,11 @@
             document.getElementById('valorTotal').value = (document.getElementById('prdtValor').value * document.getElementById('qtdeItem').value).toFixed(2);
         }
 
-		function fnAddItem(){
+		function fnAddItem(nCodigo){
 
 			let tabela = document.all.eTblItem;
 
-			if(fnCountItens(parseInt(prdtCodigo)) == -1) {
+			if(fnCountItens(nCodigo) == -1) {
 				const conexao = new XMLHttpRequest();
 				conexao.open('GET','/mvcaplicado/public/item/create/'+idProduto+'/'+document.all.qtdeItem.value+'/'+idVenda);
 				conexao.send();
@@ -307,12 +312,10 @@
 		function fnCountItens(nCodigo) {
 			let tdCodigo = document.getElementsByClassName('tdCodigo');
 			if(tdCodigo.length > 0){
-				for (i = 0;i <= tdCodigo.length; i++) {
-					if(nCodigo == tdCodigo[i].innerText) {
-						return i;
-					}
-
-					return -1;
+				for (i = 0;i < tdCodigo.length; i++) {
+					if(tdCodigo[i].innerText == nCodigo) {
+						return 0;
+					} 
 				}
 			} 
 

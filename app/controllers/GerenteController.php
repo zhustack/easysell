@@ -7,15 +7,15 @@ class GerenteController extends Controller
 	private $gerente;
 	
 	public function __construct(){
-		if (session_status() == '2' && isset($_SESSION['dadosGerente'])) {
-			$this->gerente = Gerente::find($_SESSION['dadosGerente']['idFuncionario'])->toArray();
+		if (session_status() == '2' && isset($_SESSION['dados'])) {
+			$this->gerente = Gerente::find($_SESSION['dados']['idFuncionario'])->toArray();
 		} else {
 			header('Location: /mvcaplicado/public/home/index');
 		}
 	}
 	
 	public function index() {	
-		$this->view('gerente/index',['titlePage' => 'Painel Gerente', 'nomeGerente' => $this->gerente['fNome'], 'imgPerfil' => $this->gerente['fFoto']]);
+		$this->view('gerente/index',['titlePage' => 'Painel Gerente', 'fNome' => $this->gerente['fNome'], 'imgPerfil' => $this->gerente['fFoto']]);
 	}
 
 	public function funcionario($params = "") {
@@ -23,7 +23,7 @@ class GerenteController extends Controller
 		$this->view('gerente/funcionarios', 
 			[
 				'titlePage' => "Edição de Funcionários",
-				'nomeGerente' =>$this->gerente['fNome'],
+				'fNome' =>$this->gerente['fNome'],
 				'imgPerfil' => $this->gerente['fFoto'],
 				'funcionarios' => $arrayVenIna
 			]);
@@ -37,7 +37,7 @@ class GerenteController extends Controller
 		$this->view('gerente/categoriasemarcas',
 			[
 				'titlePage' => "Categorias e Marcas",
-				'nomeGerente' => $this->gerente['fNome'],
+				'fNome' => $this->gerente['fNome'],
 				'imgPerfil' => $this->gerente['fFoto'], 
 				'categorias' => $arrayCategegorias, 
 				'marcas' => $arrayMarcas,
@@ -57,7 +57,7 @@ class GerenteController extends Controller
 		$this->view('gerente/cadastrarprodutos',
 			[
 				'titlePage' => "Cadastrar Produtos",
-				'nomeGerente' => $this->gerente['fNome'],
+				'fNome' => $this->gerente['fNome'],
                 'imgPerfil' => $this->gerente['fFoto'], 
                 'prdtSucess' => $prdtSucess,
                 'idFuncionario' => $this->gerente['idFuncionario']
@@ -89,7 +89,7 @@ class GerenteController extends Controller
             if(isset($produtoDetails[0])){
                $this->view('gerente/detalhesprodutos',[
                     'titlePage' => "Detalhes Produtos",
-                    'nomeGerente' => $this->gerente['fNome'],
+                    'fNome' => $this->gerente['fNome'],
                     'imgPerfil' => $this->gerente['fFoto'],
                     'msg' => $prdtSucess,
                     'produto' => $produtoDetails,
@@ -105,7 +105,7 @@ class GerenteController extends Controller
                 $this->view('gerente/produtos',
                 [
                     'titlePage' => "Gerenciar Produtos",
-                    'nomeGerente' => $this->gerente['fNome'],
+                    'fNome' => $this->gerente['fNome'],
                     'imgPerfil' => $this->gerente['fFoto'], 
                     'produtos' => $arrayProdutos,
                     'msg' => $prdtError,
@@ -118,7 +118,7 @@ class GerenteController extends Controller
             $this->view('gerente/produtos',
                 [
                     'titlePage' => "Gerenciar Produtos",
-                    'nomeGerente' => $this->gerente['fNome'],
+                    'fNome' => $this->gerente['fNome'],
                     'imgPerfil' => $this->gerente['fFoto'], 
                     'produtos' => $arrayProdutos,
                     'msg' => $prdtError,
@@ -133,10 +133,10 @@ class GerenteController extends Controller
 
         $arrayProdutos = Produto::join('Categoria', 'Produto.idCategoria', '=', 'Categoria.idCategoria')->join('Marca','Produto.idMarca','=','Marca.idMarca')->whereRaw('prdtStatus = "a" and Categoria.idFuncionario = ?', [$this->gerente['idFuncionario']])->get()->toArray();   
         
-        $this->view('gerente/caixa',
+        $this->view('venda/caixa',
                    [
                     'titlePage' => "Caixa",
-                    'nomeGerente' => $this->gerente['fNome'],
+                    'fNome' => $this->gerente['fNome'],
                     'imgPerfil' => $this->gerente['fFoto'], 
                     'produtos' => $arrayProdutos,
                     'idFuncionario' => $this->gerente['idFuncionario']
@@ -146,33 +146,41 @@ class GerenteController extends Controller
     }
 
     public function configuracoes(){
-        
+        $msg = 0;
         if(isset($_POST['idGerente'])) {
             extract($_POST);
             
-        //    if(Funcionario::whereRaw('fEmail = ?', [$fEmail])->get()->count() <= 0) {
-                $fFoto = $this->nomeArquivo();
-               Gerente::find($idGerente)->update([
-                'fNome' => $fNome, 
-                'fSobrenome' => $fSobrenome,
-                'fDataNasc' => $fDataNasc,
-                'fFoto' => $fFoto,
-                'fEmail' => $fEmail,
-                'fSenha' => $fSenha != '' ? $fSenha: $this->gerente['fSenha']
-               ]);
+            if(Funcionario::whereRaw('fEmail = ? and fStatus="A"', [$fEmail])->count() == 0 || $this->gerente['fEmail'] == $fEmail) {
+                if($flagFoto == 0) {
+                    $fFoto = $this->nomeArquivo();
+                } else {
+                    $fFoto="default.png";
+                }
+                Gerente::find($idGerente)->update([
+                    'fNome' => $fNome, 
+                    'fSobrenome' => $fSobrenome,
+                    'fDataNasc' => $fDataNasc,
+                    'fFoto' => $fFoto,
+                    'fEmail' => $fEmail,
+                    'fSenha' => $fSenha != '' ? $fSenha: $this->gerente['fSenha']
+                ]);
 
-               $this->salvarArquivo($fFoto);
-               $this->gerente = Gerente::find($idGerente)->toArray();
-            //    $this->gerente = $_SESSION['dadosGerente'];
-                // header('Location: /mvcaplicado/public/gerente/configuracoes')
-        //    }
-
+                $msg = 0;
+                $this->salvarArquivo($fFoto);
+                $this->gerente = Gerente::find($idGerente)->toArray();
+                //    $this->gerente = $_SESSION['dados'];
+                    // header('Location: /mvcaplicado/public/gerente/configuracoes')
+            } else {
+                $msg = 1;
+            }
         }
+
         $this->view('gerente/configuracoes',
         [
             'titlePage' => "Configurações",
-            'nomeGerente' => $this->gerente['fNome'],
+            'fNome' => $this->gerente['fNome'],
             'imgPerfil' => $this->gerente['fFoto'], 
+            'msg' => $msg,
             'dadosFuncionario' => $this->gerente
     ]);
        
@@ -186,20 +194,22 @@ class GerenteController extends Controller
 		session_destroy();
         header('Location: index');
     }
-    
+
     private function salvarArquivo( $nomeArquivo ) {
 		$arquivo = $_FILES['fFoto']['tmp_name'];
 		return move_uploaded_file ( $arquivo, "C:\wamp64\www\mvcaplicado\public\assets\imgsBanco\\$nomeArquivo");
 	}
 
 	private function nomeArquivo() {
-		if ( isset($_FILES['fFoto']) && $_FILES['fFoto']['name'] != 'default.png') {
+		if ( isset($_FILES['fFoto']) && $_FILES['fFoto']['name'] != 'default.png' && $_FILES['fFoto']['name'] != "") {
 			$nome = $_FILES['fFoto']['name'];
 			$arrayArquivo = explode('.', $nome);
 			$extensao = $arrayArquivo[1];
 
 			return microtime() . rand() . '.' . $extensao;
-		} else {
+		} else if($_FILES['fFoto']['name'] == "") {
+            return $this->gerente['fFoto'];
+        } else {
 			return "default.png";
 		}
 	}

@@ -10,14 +10,14 @@
 		
 			<div class="input-group mb-2 mt-2">
 				<div class="input-group-prepend">
-					<div class="input-group-text">#</div>
+					<div class="input-group-text"><i class="fas fa-user"></i></div>
 				</div>
 				<input type="email" class="form-control" id="email" name="email" placeholder="E-mail*" required>
 			</div>
 
 			<div class="input-group mb-2">
 				<div class="input-group-prepend">
-					<div class="input-group-text">#</div>
+					<div class="input-group-text"><i class="fas fa-lock"></i></div>
 				</div>
 				<input type="password" class="form-control" id="password" name="password" placeholder="Senha*" required>
 			</div>
@@ -29,10 +29,19 @@
 				</select>
 			</div> -->
 				<button name="btnLogin" class="btn btn-primary col-sm-6">Entrar</button>
-				<center>><label class="text-warning mt-2"><?php if($data['error']){echo 'Login e/ou senha incorreto!';}?></label></center
+				<center>><label class="text-warning mt-2"><?php if($data['message'] == 2){echo 'Login e/ou senha incorreto!';}?></label></center
 	</form>
 	<span class="text-muted">Não possui conta? <a href="/mvcaplicado/public/home/cadastrar">Cadastre-se</a>.</span>
 </div>
 </body>
+<?php 
+	if($data['message'] == -1) {
+		echo "<script language='javascript' type='text/javascript'>alert('Email já cadastrado\\nEfetue seu login!');</script>";
+	}
 
+	if($data['message'] == 1) {
+		echo "<script language='javascript' type='text/javascript'>alert('Cadastro realizado com sucesso!');</script>";
+	}
+
+?>
 </html>

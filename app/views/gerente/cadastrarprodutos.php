@@ -6,20 +6,20 @@
 		<div class="container-fluid p-0 m-0 h-100 w-100 d-flex flex-row">
 				<?php require_once "../app/views/common/navLateralG.php"; ?>
 				<div class="general h-100 d-flex flex-column justify-content-start align-items-center">
-					<form class="w-50" method="post" action="/mvcaplicado/public/produto/create/">
+					<form class="w-50" id="cadProd" name="cadProd" method="post" action="/mvcaplicado/public/produto/create/">
 
 						<center><label class="display-4 bg-dark text-light rounded p-1 mt-5 mb-3 w-100">Cadastrar</label></center>
 
 						<div class="input-group input-group-lg mb-2">
 							<div class="input-group-prepend">
-							<div class="input-group-text">#</div>
+							<div class="input-group-text"><i class="fas fa-barcode"></i></div>
 							</div>
 							<input type="text" class="form-control" id="codeProd" name="codeProd" onblur="fnBuscaCodigo(this.value)" placeholder="Código do Produto*" required>
 						</div>
 
 						<div class="input-group input-group-lg mb-2">
 							<div class="input-group-prepend">
-							<div class="input-group-text">#</div>
+							<div class="input-group-text "><i class="fas fa-tags"></i></div>
 							</div>
 							<input type="text" class="form-control" id="prodName" name="prodName" placeholder="Nome do Produto*" required>
 						</div>
@@ -28,7 +28,7 @@
                             <div class="form-group col-md-6">
                                 <div class="input-group input-group-lg">
                                     <div class="input-group-prepend">
-                                        <div class="input-group-text">R$</div>
+                                        <div class="input-group-text"><i class="fas fa-dollar-sign"></i></div>
                                     </div>
                                     <input class="form-control" type="text" id="valor" name="valorUni" placeholder="Valor Un.*" required>
                                 </div>
@@ -36,7 +36,7 @@
                             <div class="form-group col-md-6">
                                 <div class="input-group input-group-lg">
                                     <div class="input-group-prepend">
-                                        <div class="input-group-text">#</div>
+                                        <div class="input-group-text"><i class="fas fa-shopping-bag"></i></div>
                                     </div>
                                     <input class="form-control" type="number" name="quantidade" id="quantidade" placeholder="Quantidade*" required>
                                 </div>
@@ -58,13 +58,25 @@
                         <div class="form-group">
                             <textarea class="form-control" id="descricao" name="descricao" rows="5" placeholder="Dê uma breve descrição sobre o produto"></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary">Cadastrar</button>
+                        <button type="button" id="btnEnvia" onclick="fnValida()" class="btn btn-primary">Cadastrar</button>
 					</form>
 
 				</div>
 		</div>
 	</body>
 		<script type="text/javascript">
+		function fnValida() {
+			if(document.all.prodMarc.value == 0 || document.all.prodCat.value == 0) {
+				alert('Certifique-se de selecionar a marca e a categoria do seu produto!');
+				document.all.prodMarc.style.border="3px solid red";
+				document.all.prodCat.style.border="3px solid red";
+				document.all.btnEnvia.type="button";
+			} else {
+				document.all.btnEnvia.type="submit";
+				document.all.btnEnvia.click();
+			}
+		}
+
 		function carregarMarcas(){
             
 			let selectMarca = document.getElementById("prodMarc");
@@ -76,7 +88,7 @@
 
 				marcas = JSON.parse(conexao.responseText);
                 
-                selectMarca.insertAdjacentHTML('beforeend', '<option selected="selected" disabled="disabled">Marca</option>');
+                selectMarca.insertAdjacentHTML('beforeend', '<option value="0" selected="selected" disabled="disabled">Marca</option>');
                 
 				for(i=0;i<marcas.length;i++){
 					selectMarca.insertAdjacentHTML('beforeend','<option value='+marcas[i].idMarca+'>'+marcas[i].mrcNome.replace('-',' ')+'</option>');
@@ -127,7 +139,7 @@
 
 				categorias = JSON.parse(conexao.responseText);
                 
-                selectCat.insertAdjacentHTML('beforeend', '<option selected="selected" disabled="disabled">Categoria</option>');
+                selectCat.insertAdjacentHTML('beforeend', '<option value="0" selected="selected" disabled="disabled">Categoria</option>');
                 
 				for(i=0;i<categorias.length;i++){
 					selectCat.insertAdjacentHTML('beforeend','<option value='+categorias[i].idCategoria+'>'+categorias[i].ctgrNome.replace('-',' ')+'</option>');

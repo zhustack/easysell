@@ -4,6 +4,22 @@
 * {
 	border: 0px solid;
 }
+
+a {
+	color: #aaa !important;
+	transition: 0.5s;
+}
+
+a:hover {
+	color: #fff !important;
+	transition: 0.5s;
+}
+
+input:read-only { 
+	background-color: white !important;
+	cursor: no-drop;
+}
+
 html{
 	height: 100%;
 	width: 100%;
