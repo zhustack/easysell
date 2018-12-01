@@ -167,7 +167,7 @@
 										<div class="input-group-append">
 											<span class="input-group-text espacamento"><i class="fas fa-donate"></i></span>
 										</div>
-										<input class="form-control inputt" type="text" name="vndDesconto" id="vndDesconto" placeholder="Desconto"/>
+										<input class="form-control inputt" onblur="fnCalculaDesconto(this)" type="text" name="vndDesconto" id="vndDesconto" placeholder="Desconto"/>
 									</div>
 									<div class="input-group w-50">
 										<div class="input-group-append">
@@ -205,6 +205,10 @@
             </div>
         </div>
     </body>
+	<?php if($data['msg'] == 1) {
+		echo "<script type='text/javascript'>alert('Venda Finalizada!');</script>";
+	}
+	?>
     <script>
 		var 
 			idCliente, 
@@ -304,7 +308,7 @@
 					prdtNome = document.all.prdtNome.value = produto[0].prdtNome.replace('-',' ').replace('-',' ');
 					prdtValor = document.all.prdtValor.value = produto[0].prdtValor;
 					prdtCodigo = parseInt(codigo);
-
+					document.all.qtdeItem.max = parseInt(produto[0].prdtQuantidade);
 					document.all.qtdeItem.focus();
 				}
 			} else {
@@ -317,7 +321,15 @@
         }
         
         function fazTotal(){
-            document.getElementById('valorTotal').value = (document.getElementById('prdtValor').value * document.getElementById('qtdeItem').value).toFixed(2);
+			if(parseInt(document.getElementById('qtdeItem').value) <= parseInt(document.getElementById('qtdeItem').max)) {
+           		document.getElementById('valorTotal').value = (document.getElementById('prdtValor').value * document.getElementById('qtdeItem').value).toFixed(2);
+			} else {
+				
+				document.getElementById('qtdeItem').value = '';
+				document.getElementById('qtdeItem').placeholder = 'Quantidade não disponível!';
+				document.getElementById('qtdeItem').focus();
+				
+			}
         }
 
 		function fnAddItem(nCodigo){
@@ -387,6 +399,18 @@
 			document.all.prdtValor.value = "";
 			document.all.prdtCodigo.value = "";
 			document.all.valorTotal.value = "";
+		}
+
+		function fnCalculaDesconto(desconto) {
+			if(desconto.value != '' && desconto.value != 0) {
+				descontoR = parseFloat(desconto.value);
+				if(desconto.value.search('%') != -1) {
+					document.all.vndValorTotal.value = document.all.vndValorTotal.value - descontoR;
+					document.all.vndValorParcela.value = (document.all.vndValorTotal.value / document.all.vndParcelas.value).toFixed(2); 
+				} else {
+					document.all.vndValorTotal.value = (document.all.vndValorTotal.value - (document.all.vndValorTotal.value * descontoR / 100)).toFixed(2);
+				}
+			} 
 		}
 
 		function fnValorTotal() {

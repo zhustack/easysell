@@ -8,6 +8,6 @@ class Venda extends Eloquent
 	protected $primaryKey = 'idVenda';
 	public $timestamps = false;
 
-	protected $fillable = ['vndData','vndValorTotal', 'vndDesconto', 'vndStatus', 'vndPagamento', 'vndParcelas', 'vndValorParcela', 'idFuncionario', 'idCliente'];
+	protected $fillable = ['vndData','vndHora','vndValorTotal', 'vndDesconto', 'vndStatus', 'vndPagamento', 'vndParcelas', 'vndValorParcela', 'idFuncionario', 'idCliente'];
 
 }
