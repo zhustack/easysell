@@ -5,20 +5,20 @@
 		<div class="container-fluid p-0 m-0 h-100 w-100 d-flex flex-row">
 				<?php require_once "../app/views/common/navLateralG.php"; ?>
 				<div class="general h-100 d-flex flex-column justify-content-start align-items-center">
-					<form class="w-50 detalhesProduto" method="post" action="/mvcaplicado/public/produto/editar">
+					<form class="w-50 d-flex flex-column justify-content-around detalhesProduto" method="post" action="/mvcaplicado/public/produto/editar">
 
-						<center><label class="display-4 bg-dark text-light rounded p-1 mt-5 w-100 mb-3">Detalhes</label><center></center>
+						<center><label class="display-4 bg-dark text-light rounded p-1 mt-5 w-100 mb-3">Detalhes</label></center>
 						<input type="hidden" name="idProduto" id="idProduto" value="<?= $data['produto']['0']['idProduto']?>">
 						<div class="input-group input-group-lg mb-2">
 							<div class="input-group-prepend">
-							<div class="input-group-text">#</div>
+							<div class="input-group-text"><i class="fas fa-barcode"></i></div>
 							</div>
 							<input onDblClick="ativaInput(this.id);" onclick="()=>{codigoInical = this.value;}" type="text" class="form-control" id="codeProd" name="codeProd" onblur="fnBuscaCodigo(this.value)" placeholder="Código do Produto" value="<?= $data['produto'][0]['prdtCodigo']; ?>" readonly required>
 						</div>
 
 						<div class="input-group input-group-lg mb-2">
 							<div class="input-group-prepend">
-							<div class="input-group-text">#</div>
+							<div class="input-group-text"><i class="fas fa-tags"></i></div>
 							</div>
 							<input onDblClick="ativaInput(this.id)" type="text" class="form-control" id="prodName" name="prodName" placeholder="Nome do Produto*" value="<?= str_replace('-',' ', $data['produto']['0']['prdtNome']);?>" readonly required>
 						</div>
@@ -27,7 +27,7 @@
                             <div class="form-group col-md-6">
                                 <div class="input-group input-group-lg">
                                     <div class="input-group-prepend">
-                                        <div class="input-group-text">R$</div>
+                                        <div class="input-group-text"><i class="fas fa-dollar-sign"></i></div>
                                     </div>
                                     <input onDblClick="ativaInput(this.id)" class="form-control" type="text" id="valor" name="valorUni" placeholder="Valor Un.*" value="<?= $data['produto']['0']['prdtValor']?>" readonly required>
                                 </div>
@@ -35,7 +35,7 @@
                             <div class="form-group col-md-6">
                                 <div class="input-group input-group-lg">
                                     <div class="input-group-prepend">
-                                        <div class="input-group-text">#</div>
+                                        <div class="input-group-text"><i class="fas fa-shopping-bag"></i></div>
                                     </div>
                                     <input onDblClick="ativaInput(this.id)" class="form-control" type="number" name="quantidade" id="quantidade" placeholder="Quantidade*" value="<?= $data['produto']['0']['prdtQuantidade']?>" readonly required>
                                 </div>
@@ -56,10 +56,14 @@
 						</div>
                         <div class="form-group">
                             <textarea onDblClick="ativaInput(this.id)" class="form-control" id="descricao" name="descricao" rows="5" placeholder="Dê uma breve descrição sobre o produto" readonly><?= $data['produto'][0]['prdtDescricao']; ?></textarea>
-                        </div>
-                       <a href="/mvcaplicado/public/gerente/produto"><button type="button" class="btn btn-primary">Voltar</button></a>
-                        <button type="submit" class="btn btn-primary">Salvar</button>
-                        <button type="button" class="btn btn-primary" onClick="deletarProd(document.all.idProduto.value)">Excluir</button>
+						</div>
+						<div class="justify-content-between d-flex flex-row">
+							<a href="/mvcaplicado/public/gerente/produto"><button type="button" class="btn btn-primary">Voltar</button></a>
+							<div class="flex-row">
+								<button type="submit" class="btn btn-primary">Salvar</button>
+								<button type="button" class="btn btn-primary" onClick="deletarProd(document.all.idProduto.value)">Excluir</button>
+							</div>
+						</div>
 					</form>
 
 				</div>

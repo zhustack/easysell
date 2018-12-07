@@ -21,7 +21,7 @@
 					<i class="fas fa-users fa-5x"></i><br>
 					<label class="display-4">Equipe</label>
 				</div></a>
-				<a href="#"><div class="funcionalidadeGerente rounded">
+				<a href="/mvcaplicado/public/gerente/configuracoes"><div class="funcionalidadeGerente rounded">
 					<i class="fas fa-cogs fa-5x"></i><br>
 					<label class="display-4">Configurações</label>
 				</div></a>

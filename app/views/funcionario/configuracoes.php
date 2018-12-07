@@ -8,11 +8,11 @@
 	
 	<div class="container-fluid h-100 d-flex flex-row w-100 p-0 m-0">
 
-		<?php require_once "../app/views/common/navLateralG.php"; ?>
+		<?php require_once "../app/views/common/navLateralF.php"; ?>
 		<div class="general h-100 d-flex flex-column justify-content-start align-items-center">
-			<form id="formConfig" name="formConfig" class="w-50 mt-5" action="/mvcaplicado/public/gerente/configuracoes" method="post" enctype="multipart/form-data">
+			<form id="formConfig" name="formConfig" class="w-50 mt-5" action="/mvcaplicado/public/funcionario/configuracoes" method="post" enctype="multipart/form-data">
 			<center><label class="display-4 p-1 mb-3 rounded text-light bg-dark w-100">Configurações</label></center>
-				<input type="hidden" value="<?= $data['dadosFuncionario']['idFuncionario'];?>" name="idGerente" />
+				<input type="hidden" value="<?= $data['dadosFuncionario']['idFuncionario'];?>" name="idFuncionario" />
 				<div class="input-group input-group-lg w-100 mb-2">
 					<div class="input-group-prepend">
 						<div class="input-group-text"><i class="fas fa-user"></i></div>
@@ -27,7 +27,6 @@
 					<input type="text" class="form-control" id="fSobrenome" name="fSobrenome" ondblclick="ativaInput(this.id)"  value="<?= $data['dadosFuncionario']['fSobrenome'];?>" readOnly placeholder="Sobrenome*" required>
 				</div>
 
-				
 				<div class="input-group input-group-lg w-100 mb-2 ">
 					<div class="input-group-prepend">
 						<div class="input-group-text"><i class="fas fa-birthday-cake"></i></div>
@@ -51,8 +50,6 @@
 						<button type="submit" style="height:39px;" class="w-25 btn-defaultOur rounded" onclick="document.all.flagFoto.value='1';"">Remover</button>
 				</div>
 
-
-
 				<div class="input-group input-group-lg w-50 mb-2">
 					<div class="input-group-prepend">
 						<div class="input-group-text"><i class="fas fa-lock"></i></div>
@@ -64,7 +61,7 @@
 					<div class="input-group-prepend">
 						<div class="input-group-text"><i class="fas fa-lock"></i></div>
 					</div>
-					<input class="form-control" type="password" id="passConfirm" placeholder="Confirmar Senha*">
+					<input class="form-control" type="password" id="passConfirm" placeholder="Confirmar Nova Senha*">
 				</div>
 
 

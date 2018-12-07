@@ -32,8 +32,14 @@ class ProdutoController extends Controller {
     
     public function show($idP) {
         if(isset($_SESSION['dados'])) {
-            $produtoDetails = Produto::join('Categoria', 'Produto.idCategoria', '=', 'Categoria.idCategoria')->join('Marca','Produto.idMarca','=','Marca.idMarca')->whereRaw('prdtStatus = "A" and Categoria.idFuncionario = ? and (idProduto = ? or prdtCodigo = ?)', [$_SESSION['dados']['idFuncionario'], $idP, $idP])->get()->toArray();
-            echo json_encode($produtoDetails);
+            if(!isset($_SESSION['idGerente'])) {
+                $produtoDetails = Produto::join('Categoria', 'Produto.idCategoria', '=', 'Categoria.idCategoria')->join('Marca','Produto.idMarca','=','Marca.idMarca')->whereRaw('prdtStatus = "A" and Categoria.idFuncionario = ? and (idProduto = ? or prdtCodigo = ?)', [$_SESSION['dados']['idFuncionario'], $idP, $idP])->get()->toArray();
+                echo json_encode($produtoDetails);
+            } else {
+                 $produtoDetails = Produto::join('Categoria', 'Produto.idCategoria', '=', 'Categoria.idCategoria')->join('Marca','Produto.idMarca','=','Marca.idMarca')->whereRaw('prdtStatus = "A" and (idProduto = ? or prdtCodigo = ?)', [$idP, $idP])->get()->toArray();
+                echo json_encode($produtoDetails);
+                // echo "ue";
+            }
         } else {
             echo 0;
         }

@@ -3,7 +3,12 @@
 	<?php require_once "../app/views/common/head.php"; ?>
     <html>
     <script type="text/javascript" src="\mvcaplicado\public\assets\chart.js\dist\Chart.js"></script>
-
+    <style>
+        .graficos .btn-defaultOur {
+            height: 2.5em;
+            width: 8.5em;
+        }
+    </style>
 	<body>
 		<div class="container-fluid p-0 m-0 h-100 w-100 d-flex flex-ow">
 			<?php 
@@ -13,16 +18,30 @@
                     require_once "../app/views/common/navLateralF.php"; 			
 				}
                 ?>
-			<div class="general d-flex justify-content-center align-items-center flex-row h-100 p-0">
+			<div class="general graficos d-flex justify-content-center align-items-center flex-column h-100 p-0">
+                <div id="sisGrafico" class="mb-3" >
+                <?php 
+                    if($_SESSION['dados']['idTipoFunc'] == 1) {
+                        ?>
+                        <button class="btn-defaultOur" onclick="fnConsultaGrafico()">Ranking Geral</button>
+                        <button class="btn-defaultOur" onclick="fnConsultaGrafico('pessoal')">Ranking Pessoal</button>
+                        <button class="btn-defaultOur" onclick="fnConsultaGrafico('hoje')">Ranking Diário</button>
+                        <button class="btn-defaultOur" onclick="fnConsultaGrafico('mes')">Ranking Mensal</button>
+                <?php 			
+                    } else {
+                        ?>
+                        <button class="btn-defaultOur" onclick="fnConsultaGrafico()">Ranking Geral</button>
+                        <button class="btn-defaultOur" onclick="fnConsultaGrafico('mesF')">Ranking Mensal</button>
+                        <button class="btn-defaultOur" onclick="fnConsultaGrafico('hoje')">Ranking Diário</button>
+
+                <?php
+                    }
+                ?>
+                    
+                </div>
                 <div id="paiGrafico">
                     <!-- <canvas id="grafico" width="400" height="400"></canvas> -->
                 </div>
-                    <div id="sisGrafico" >
-                        <button onclick="fnConsultaGrafico()">Ranking Geral</button>
-                        <button onclick="fnConsultaGrafico('pessoal')">Ranking Pessoal</button>
-                        <button onclick="fnConsultaGrafico('hoje')">Ranking Diário</button>
-                        <button onclick="fnConsultaGrafico('mes')">Ranking Mensal</button>
-                    </div>
             </div>
         </div>
     </body>
@@ -48,8 +67,8 @@
                 }
             }
             var eGrafico = document.createElement("CANVAS");
-            eGrafico.width = "400";
-            eGrafico.height = "400";
+            eGrafico.width = "600";
+            eGrafico.height = "550";
             eGrafico.id = "grafico";
             document.all.paiGrafico.appendChild(eGrafico);
 
@@ -64,15 +83,26 @@
             if(type == 'pessoal') {
                 for( i = 0 ; i < dados.length; i++){
 
-                        label = 'Total de Vendas por Mês';
+                        label = 'Seu ranking pessoal por dia';
                 
                         labels.push(dados[i].vndData);
                         
                         valores.push(parseFloat(dados[i].totVenda));
                 
-                        bgColor.push('rgba(' + parseInt((Math.random() * 255) + 1) + ',0,' + parseInt((Math.random() * 255) + 1) + ',1)');
+                        bgColor.push('rgba(' + parseInt((Math.random() * 255) + 1) + ',0,' + parseInt((Math.random() * 100) + 1) + ',1)');
                 }
                 
+            } else if (type == 'mesF') {
+                for( i = 0 ; i < dados.length; i++){
+
+                    label = 'Seu ranking este mês';
+
+                    labels.push(dados[i].vndData);
+
+                    valores.push(parseFloat(dados[i].totVenda));
+
+                    bgColor.push('rgba(' + parseInt((Math.random() * 255) + 1) + ',0,' + parseInt((Math.random() * 255) + 1) + ',1)');
+                }
             } else {
                 for( i = 0 ; i < dados.length; i++){
 
@@ -80,8 +110,9 @@
 
                         if(dados[i].fCodigo != null) {
                             labels.push(dados[i].fCodigo + ' - ' + dados[i].fNome);
+                        } else {
+                            labels.push(dados[i].fNome);
                         }
-                        labels.push(dados[i].fNome);
                         
                         valores.push(parseFloat(dados[i].totVenda));
     
@@ -99,17 +130,11 @@
                     datasets: [{
                         label: label,
                         data: valores,
-                        backgroundColor: bgColor,
-                        borderColor: [
-                            'rgba(255,99,132,1)'
-                        ],
-                        borderWidth: 2
+                        backgroundColor: bgColor
                     }]
                 },
                 options: {
-                    tooltips: {
-                        mode: 'nearest'
-                    },
+                    
                     scales: {
                         yAxes: [{
                             ticks: {

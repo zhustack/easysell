@@ -5,18 +5,18 @@
 	</span>
 	<ul class="nav d-inline-block h-75">
 		<li class="nav-item">
-			<a class="nav-link" href="#"><button class="btn-lg btn-defaultOur dropdown-btn">Vendas  <i class="fa fa-caret-down ml-2"></i></button></a>
-			<div class="dropdown-container text-center">
-				<a class="nav-link" href="/mvcaplicado/public/venda/index">Registrar Venda</a>
-				<a class="nav-link" href="/mvcaplicado/public/venda/grafics">Registros</a>
-			</div>
-		</li>
-		<li class="nav-item">
 			<a class="nav-link" href="#"><button class="btn-lg btn-defaultOur dropdown-btn">Produtos  <i class="fa fa-caret-down ml-2"></i></button></a>
 			<div class="dropdown-container text-center">
 				<a class="nav-link" href="/mvcaplicado/public/gerente/cadastrarprodutos">Cadastrar Produtos</a>
 				<a class="nav-link" href="/mvcaplicado/public/gerente/produto">Gerenciar Produtos</a>
 				<a class="nav-link" href="/mvcaplicado/public/gerente/categoriasemarcas">Categorias e Marcas</a>
+			</div>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="#"><button class="btn-lg btn-defaultOur dropdown-btn">Vendas  <i class="fa fa-caret-down ml-2"></i></button></a>
+			<div class="dropdown-container text-center">
+				<a class="nav-link" href="/mvcaplicado/public/venda/index">Registrar Venda</a>
+				<a class="nav-link" href="/mvcaplicado/public/venda/grafics">Registros</a>
 			</div>
 		</li>
 		<li class="nav-item">

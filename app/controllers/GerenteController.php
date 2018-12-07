@@ -8,7 +8,11 @@ class GerenteController extends Controller
 	
 	public function __construct(){
 		if (session_status() == '2' && isset($_SESSION['dados'])) {
-			$this->gerente = Gerente::find($_SESSION['dados']['idFuncionario'])->toArray();
+            if($_SESSION['dados']['idTipoFunc'] == 1) {
+                $this->gerente = Gerente::find($_SESSION['dados']['idFuncionario'])->toArray();
+            } else {
+                header('Location: /mvcaplicado/public/home/index');
+            }
 		} else {
 			header('Location: /mvcaplicado/public/home/index');
 		}

@@ -68,8 +68,8 @@
 		function fnValida() {
 			if(document.all.prodMarc.value == 0 || document.all.prodCat.value == 0) {
 				alert('Certifique-se de selecionar a marca e a categoria do seu produto!');
-				document.all.prodMarc.style.border="3px solid red";
-				document.all.prodCat.style.border="3px solid red";
+				document.all.prodMarc.style.border="1.5px solid red";
+				document.all.prodCat.style.border="1.5px solid red";
 				document.all.btnEnvia.type="button";
 			} else {
 				document.all.btnEnvia.type="submit";

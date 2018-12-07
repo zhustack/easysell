@@ -5,17 +5,17 @@
 	<body>
 		<div class="container-fluid p-0 m-0 h-100 w-100 d-flex flex-ow">
 			<?php require_once "../app/views/common/navLateralG.php"; ?>
-			<div class="general d-flex justify-content-center align-items-center flex-row h-100 p-0">
+			<div class="general d-flex justify-content-around align-items-center flex-row h-100 p-0">
 				<div class="blocoCategoria">
-					<label style="width:90%" class="display-4 bg-dark text-light rounded p-1 mt-5 mb-0">Categorias</label>
-					<table class="table table-striped mt-3">
-						<thead class="thead text-light" style="background-color: #222">
+					<label class="display-4 mt-3 mb-0">Categorias</label>
+					<table class="table table-hover mt-3">
+						<thead class="thead thead-dark text-light">
 							<tr>
 								<th scope="col">Nome</th>
 								<th scope="col">Ações</th>
 							</tr>
 						</thead>
-						<tbody>
+						<tbody class="table-bordered">
 							<?php 
 							if (count($data['categorias']) > 0) {
 						// print_r($data['funcionarios']);
@@ -29,28 +29,29 @@
 										</td>
 									</tr>
 									<?php } ?>
-									<tr style="background-color: #ccc">
-										<td><input class="form-control" id="catCriar" type="text" style="cursor: default; background-color: #ddd; color: black" name="ctgrNome" placeholder="Adicione Categorias"></td>
+									<tr>
+										<td><input class="form-control" id="catCriar" type="text" style="cursor: default;" name="ctgrNome" placeholder="Adicione Categorias"></td>
 										<td><button onClick="criarCat()" class="btn btn-defaultOur rounded">Adicionar</button></td>
 									</tr>
 
 								<?php } else{
-									echo "<tr style='background-color: #ccc'><td><input class='form-control' id='catCriar' type='text' style='cursor: default; background-color: #ddd; color: black' name='ctgrNome' placeholder='Adicione Categorias'></td>
+									echo "<tr><td colspan='2'><center><b>Adicione categorias através do campo abaixo!</b></center></td></td>";
+									echo "<tr ><td><input class='form-control' id='catCriar' type='text' style='cursor: default;' name='ctgrNome' placeholder='Adicione Categorias'></td>
 									<td><button onClick='criarCat()' class='btn btn-defaultOur rounded'>Adicionar</button></td></tr>";
 								} ?>
 							</tbody>
 						</table>
 					</div>
 					<div class="blocoCategoria">
-						<label style="width:90%" class="display-4 bg-dark text-light rounded p-1 mt-5 mb-0">Marcas</label>
-						<table class="table table-striped mt-3">
-							<thead class="thead text-light" style="background-color: #222">
+						<label class="display-4 mt-3 mb-0">Marcas</label>
+						<table class="table table-hover mt-3">
+							<thead class="thead thead-dark text-light">
 								<tr>
 									<th scope="col">Nome</th>
 									<th scope="col">Ações</th>
 								</tr>
 							</thead>
-							<tbody>
+							<tbody class="table-bordered">
 								<?php 
 								if (count($data['marcas']) > 0) {
 									
@@ -65,13 +66,14 @@
 											</td>
 										</tr>
 										<?php } ?>
-										<tr style="background-color: #ccc">
-											<td><input class="form-control" id="marcaCriar" type="text" style="cursor: default; background-color: #ddd; color: black" name="mrcNome" placeholder="Adicione Marcas"></td>
+										<tr>
+											<td><input class="form-control" id="marcaCriar" type="text" style="cursor: default;" name="mrcNome" placeholder="Adicione Marcas"></td>
 											<td><button onClick="criarMarca()" class="btn btn-defaultOur rounded">Adicionar</button></td>
 										</tr>
 
 									<?php } else{
-										echo "<tr style='background-color: #ccc'><td><input class='form-control' id='marcaCriar' type='text' style='cursor: default; background-color: #ddd; color: black' name='mrcNome' placeholder='Adicione Marcas'></td>
+										echo "<tr><td colspan='2'><center><b>Adicione marcas através do campo abaixo!</b></center></td></td>";
+										echo "<tr><td><input class='form-control' id='marcaCriar' type='text' style='cursor: default;' name='mrcNome' placeholder='Adicione Marcas'></td>
 										<td><button onClick='criarMarca()' class='btn btn-defaultOur rounded'>Adicionar</button></td></tr>";
 									} ?>
 								</tbody>
@@ -97,6 +99,7 @@
 			conexao.onload = function() {
 				if(conexao.responseText == 1) {
 					location.reload(true);
+					alert("Categoria criada com sucesso!");
 				} else {
 					alert('Categoria já cadastrada!');
 					document.getElementById('catCriar').value = '';
@@ -138,6 +141,7 @@
 		 	conexao.onload = function () {
 		 		if(conexao.responseText == 1){
 					location.reload(true);
+					alert("Operação bem sucedida!");
 				}else {
 					alert('Não foi possível alterar o nome da categoria!');
 					// let placeholder = document.getElementById(id +"nomeCategoria").value;
@@ -160,6 +164,7 @@
 			conexao.onload = function() {
 				if(conexao.responseText == 1) {
 					location.reload(true);
+					alert("Marca criada com sucesso!");
 				} else {
 					alert('Marca já cadastrada!');
 					document.getElementById('marcaCriar').value = '';
@@ -201,6 +206,7 @@
 		 	conexao.onload = function () {
 				if(conexao.responseText == 1) {
 		 			location.reload(true);
+					 alert("Operação bem sucedida!");
 				} else {
 					alert('Não foi possível alterar o nome da marca!');
 					document.getElementById(id +"marcaNome").focus();

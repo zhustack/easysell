@@ -5,19 +5,20 @@
 	<body>
 		<div class="container-fluid p-0 m-0 h-100 w-100 d-flex flex-row">
 		<?php require_once "../app/views/common/navLateralG.php"; ?>
-			<div class="general blocoFuncionario d-flex justify-content-start align-items-center flex-column h-100 p-0">
-				<label class="display-4 bg-dark text-light rounded p-1 mt-5 mb-0">Relação de Liderados</label>
-				<table class="table table-striped mt-3">
+			<div class="general d-flex justify-content-center align-items-center flex-column">
+				<div class="blocoFuncionario d-flex justify-content-start align-items-center flex-column">
+				<label class="display-4 mt-3 mb-0">Relação de Liderados</label>
+				<table class="table table-bordered mt-3">
 					<thead class="thead-dark">
 						<tr>
-							<th scope="col">Código</th>
+							<th style="width: 8em;" scope="col">Código</th>
 							<th scope="col">Nome</th>
 							<th scope="col">Email</th>
 							<th scope="col">Situação</th>
 							<th scope="col"></th>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody class="table-hover">
 						<?php 
 							if (count($data['funcionarios']) > 0) {
 							$i = 0;
@@ -25,7 +26,7 @@
 							foreach ($data['funcionarios'] as $func) { ?>
 							<tr>
 								<input type="hidden" id="<?= $i."id" ?>" class="form-control" name="idFuncionario" value="<?=$func['idFuncionario']?>">
-								<th scope="row"><input type="text" id="<?= $i."codigo" ?>" class="form-control" name="fCodigo" placeholder="Atribuir Código" value="<?=$func['fCodigo']?>" ondblclick="ativaInput(this.id)" readonly/></th>
+								<th scope="row"><input type="text" id="<?= $i."codigo" ?>" class="form-control" name="fCodigo" placeholder="Atribuir" value="<?=$func['fCodigo']?>" ondblclick="ativaInput(this.id)" readonly/></th>
 								<td><input type="text" id="<?= $i."nome" ?>" class="form-control" name="fNome" value="<?=$func['fNome']?>" ondblclick="ativaInput(this.id)" readonly/></td>
 								<td><input type="text" id="<?= $i."email" ?>" class="form-control" name="fEmail" value="<?=$func['fEmail']?>" ondblclick="ativaInput(this.id)" readonly="true"/></td>
 								<td>
@@ -51,7 +52,7 @@
 										?>
 									</select>
 								</td>
-								<td>
+								<td style="width: 9.5em !important;">
 									<button class="btn btn-defaultOur btn-sm" name="updateFunc" onClick="alterarDadosFunc(<?= $i ?>)">Salvar</button>
 									<button type="submit" onClick="deletarFunc(<?= $i ?>)" class="btn btn-outline-primary btn-sm">Excluir</button></a>
 								</td>
@@ -61,7 +62,7 @@
 						} ?>
 					</tbody>
 				</table>
-
+					</div>
 			</div>
 		</div>
 	</body>

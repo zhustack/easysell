@@ -4,15 +4,72 @@
 
 <title><?= $data['titlePage']; ?></title>
 
+<style>
+
+body {
+		background-color: #111;
+		background-image: url('/mvcaplicado/public/assets/imgs/home1.jpg');
+		background-size: 100% 100%;
+		background-repeat: no-repeat;
+		padding: 0 !important;
+	}
+.bgOur {
+		background: rgba(0,0,0,0.5) !important;
+		width: 100% !important;
+		margin: 0 !important;
+}
+
+.formCad {
+	height: 30em;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	background-color: #fff;
+	padding: 0 3em;
+	border-radius: 0.75em;
+	box-shadow: 0 0 10px #333;
+	/* align-items: center; */
+}
+
+.formCad .display-4 {
+	color: #000;
+	font-size: 245%;
+}
+
+.formCad input, .formCad select {
+	border: 0;
+	border-bottom: 2px solid;
+	background: transparent !important;
+	outline-width: 0 !important;
+	transition: 0.1s;
+}
+.formCad .input-group-text {
+	border: 0;
+	border-bottom: 2px solid;
+	background: transparent !important;
+}
+.formCad input:focus, .formCad select:hover{
+	border-color: #009999;
+	background-color: transparent;
+	border-width: 2.5px;
+	transition: 0.1s;
+}
+
+.formCad a {
+	color: #111 !important;
+	font-weight: bolder;
+}
+
+</style>
+
 <body>
 
-	<div class="container h-100 d-flex flex-column justify-content-center align-items-center">
+	<div class="bgOur h-100 d-flex flex-column justify-content-center align-items-center">
 
-		<span class="display-4 text-light">Cadastre-se</span>
-
-		<form id="formLogin" name ="formLogin" class="formLogin w-50" action="/mvcaplicado/public/home/processa_cadastro" method="post" enctype="multipart/form-data">
-			
-			<div class="form-row">
+	<form id="formLogin" name ="formLogin" class="formCad" action="/mvcaplicado/public/home/processa_cadastro" method="post" enctype="multipart/form-data">
+	
+		<center><span class="display-4">Cadastre-se</span></center>
+			<div class="form-row mt-3">
 				<div class="form-group col-md-6">
 					<div class="input-group">
 						<div class="input-group-prepend">
@@ -43,9 +100,12 @@
 				</div>
 			</div>
 			<div class="form-group col-md-6">
-					<div class="custom-file">
-						<input type="file" accept="image/*"  class="custom-file-input" id="photo" name="photo">
-						<label class="custom-file-label">Foto de Perfil</label>
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<div class="input-group-text"><i class="fas fa-camera"></i></div>
+						</div>
+						<input type="file" accept="image/*"  class="form-control" id="photo" name="photo">
+						<!--label class="custom-file-label">Foto de Perfil</label>-->
 					</div>
 			</div>
 			</div>
@@ -90,9 +150,9 @@
 					<input class="form-control" type="email" name="emailGerente" id="emailGerente" placeholder="Email Gerente" disabled>
 				</div>
 			</div>
-			<button type="submit" id="btnEnviar" onclick="fnExisteGerente()" class="btn btn-primary">Cadastrar</button>
+			<button type="submit" id="btnEnviar" style="width: 7em" onclick="fnExisteGerente()" class="btn btn-defaultOur">Cadastrar</button>
+			<center><span class="">Já possui conta? <a href="index">Entre</a>.</span></center>
 		</form>
-		<span class="text-muted">Já possui conta? <a href="index">Entre</a>.</span>
 
 	</div>
 </body>
@@ -144,7 +204,7 @@
 				if(conn.responseText == 0) {
 					document.all.emailGerente.value = "";
 					document.all.emailGerente.placeholder = "Líder não encontrado!";
-					document.all.emailGerente.style.border = "5px solid red";
+					document.all.emailGerente.style.borderBottom = "5px solid red";
 					alert("Email não encontrado!");
 					document.all.emailGerente.focus();
 					

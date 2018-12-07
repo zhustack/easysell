@@ -2,7 +2,25 @@
 @import 'venda.css';
 
 * {
-	border: 0px solid;
+	border: 0px solid black;
+}
+
+textarea:hover, 
+input:hover, 
+textarea:active, 
+input:active, 
+textarea:focus, 
+input:focus,
+button:focus,
+button:active,
+button:hover,
+label:focus,
+.btn:active,
+.btn.active
+{
+    outline:0px !important;
+	-webkit-appearance:none !important;
+	box-shadow: none !important;
 }
 
 a {
@@ -47,4 +65,16 @@ body{
 .espacamento{
     width: 3em;
     padding-top: 0.7em;
+}
+
+.tdTblProdutos a {
+	color: #111 !important;
+	font-weight: semibold;
+	text-decoration: none;
+}
+.tdTblProdutos{ 
+	color: #111 !important;
+	font-weight: semibold;
+	font-size: 1.25em;
+	cursor: default;
 }

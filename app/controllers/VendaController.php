@@ -6,6 +6,7 @@ class VendaController extends Controller {
     private $vendaAberta;
     private $venda;
     private $funcionario;
+    private $cliente;
 
     function __construct() {
         $this->funcionario = Funcionario::find($_SESSION['dados']['idFuncionario'])->toArray();
@@ -30,6 +31,23 @@ class VendaController extends Controller {
             $arrayProdutos = Produto::join('Categoria', 'Produto.idCategoria', '=', 'Categoria.idCategoria')->join('Marca','Produto.idMarca','=','Marca.idMarca')->whereRaw('prdtStatus = "a" and Categoria.idFuncionario = ?', [$idFuncionario[0]['idFuncionario']])->get()->toArray();
             
         }
+
+        $this->vendaAberta = Venda::whereRaw('vndStatus = "R" AND idFuncionario = ?', [$this->funcionario['idFuncionario']])->get();
+
+        if($this->vendaAberta->count() > 0) {
+           $this->venda = Venda::join('Cliente', 'Venda.idCliente', '=', 'Cliente.idCliente')->whereRaw('idVenda = ?', [$this->vendaAberta->toArray()[0]['idVenda']])->get()->toArray();
+        } else {
+            $this->cliente = Cliente::create([
+                'idFuncionario' => $this->funcionario['idFuncionario']
+            ]);
+
+            $this->venda = Venda::create([
+                'vndStatus' => 'R',
+                'idFuncionario' => $this->funcionario['idFuncionario'],
+                'idCliente' => $this->cliente->idCliente,
+                'vndData' => date("Y-m-d H:i:s")
+            ]);
+        }
         
         $this->view('venda/index',
                    [
@@ -38,6 +56,7 @@ class VendaController extends Controller {
                     'imgPerfil' =>$this->funcionario['fFoto'], 
                     'produtos' => $arrayProdutos,
                     'msg' => $msg,
+                    'venda' => $this->venda,
                     'idFuncionario' =>$this->funcionario['idFuncionario']
                    ]
                    
@@ -50,7 +69,7 @@ class VendaController extends Controller {
         $this->vendaAberta = Venda::whereRaw('idFuncionario = ? and vndStatus = "R" ', [$this->funcionario['idFuncionario']])->get();
         
         if($this->vendaAberta->count() > 0) {
-            echo $this->vendaAberta->toArray()[0]['idVenda'];
+            echo json_encode($this->vendaAberta->toArray()[0]);
         } else {
             echo 0;
         } 
@@ -106,13 +125,16 @@ class VendaController extends Controller {
         $item->delete();
         $cliente = $vendaFail->idCliente;
         $vendaFail->delete();
-        Cliente::find($cliente)->delete();
+        // $cliente = Cliente::find($cliente);
+        // if(Venda::whereRaw('idCliente = ?', [$cliente])->count() <= 0) {
+            Cliente::find($cliente)->delete();
+        // }
     }
 
     public function grafics() {
         $this->view('venda/grafics',
             [
-                'titlePage' => "Caixa",
+                'titlePage' => "Relatórios",
                 'fNome' => $this->funcionario['fNome'],
                 'imgPerfil' =>$this->funcionario['fFoto'], 
                 'idFuncionario' =>$this->funcionario['idFuncionario']
@@ -123,16 +145,19 @@ class VendaController extends Controller {
     public function listarVendas($params = '') {
         switch($params) {
             case 'hoje':
-                $vendas = Venda::selectRaw('fNome, fCodigo, SUM(vndValorTotal) as totVenda, vndData')->join('Funcionario', 'Venda.idFuncionario', '=', 'Funcionario.idFuncionario')->whereRaw('vndStatus = "A" AND vndData = ? AND (Funcionario.idTipoFunc = 1 AND Venda.idFuncionario = ?) OR (Funcionario.idTipoFunc = 2 AND Funcionario.fELider = ?)', [date("Y-m-d"),$this->funcionario['idFuncionario'], $this->funcionario['fEmail']])->groupBy('Venda.idFuncionario')->get();
+                $vendas = Venda::selectRaw('fNome, fCodigo, SUM(vndValorTotal) as totVenda, vndData')->join('Funcionario', 'Venda.idFuncionario', '=', 'Funcionario.idFuncionario')->whereRaw('vndStatus = "A" AND vndData = ? AND ((Venda.idFuncionario = ?) OR (Funcionario.idTipoFunc = 2 AND Funcionario.fELider = ?))', [date("Y-m-d"),$this->funcionario['idFuncionario'], $this->funcionario['fEmail']])->groupBy('Venda.idFuncionario')->orderBy('totVenda', 'desc')->get();
                 break;
             case 'mes':
-                $vendas = Venda::selectRaw('fNome, fCodigo, SUM(vndValorTotal) as totVenda, vndData')->join('Funcionario', 'Venda.idFuncionario', '=', 'Funcionario.idFuncionario')->whereRaw('vndStatus = "A" AND DATE_FORMAT(vndData, "%m") = ? AND (Funcionario.idTipoFunc = 1 AND Venda.idFuncionario = ?) OR (Funcionario.idTipoFunc = 2 AND Funcionario.fELider = ?)', [date("m"),$this->funcionario['idFuncionario'], $this->funcionario['fEmail']])->groupBy('Venda.idFuncionario')->get();
+                $vendas = Venda::selectRaw('fNome, fCodigo, SUM(vndValorTotal) as totVenda, vndData')->join('Funcionario', 'Venda.idFuncionario', '=', 'Funcionario.idFuncionario')->whereRaw('vndStatus = "A" AND DATE_FORMAT(vndData, "%m") = ? AND ((Venda.idFuncionario = ?) OR (Funcionario.idTipoFunc = 2 AND Funcionario.fELider = ?))', [date("m"),$this->funcionario['idFuncionario'], $this->funcionario['fEmail']])->groupBy('Venda.idFuncionario')->orderBy('vndData','desc')->get();
+                break;
+            case 'mesF':
+                $vendas = Venda::selectRaw('fNome, fCodigo, SUM(vndValorTotal) as totVenda, vndData')->join('Funcionario', 'Venda.idFuncionario', '=', 'Funcionario.idFuncionario')->whereRaw('vndStatus = "A" AND DATE_FORMAT(vndData, "%m") = ? AND ((Venda.idFuncionario = ?) OR (Funcionario.idTipoFunc = 2 AND Funcionario.fELider = ?))', [date("m"),$this->funcionario['idFuncionario'], $this->funcionario['fEmail']])->groupBy('vndData')->orderBy('vndData','desc')->get();
                 break;
             case 'pessoal':
-                $vendas = Venda::selectRaw('fNome, fCodigo, SUM(vndValorTotal) as totVenda, vndData')->join('Funcionario', 'Venda.idFuncionario', '=', 'Funcionario.idFuncionario')->whereRaw('vndStatus = "A"and (Funcionario.idTipoFunc = 1 AND Venda.idFuncionario = ?)', [$this->funcionario['idFuncionario']])->groupBy('vndData')->get();
+                $vendas = Venda::selectRaw('fNome, fCodigo, SUM(vndValorTotal) as totVenda, vndData')->join('Funcionario', 'Venda.idFuncionario', '=', 'Funcionario.idFuncionario')->whereRaw('vndStatus = "A"and (Funcionario.idTipoFunc = 1 AND Venda.idFuncionario = ?)', [$this->funcionario['idFuncionario']])->groupBy('vndData')->orderBy('vndData','desc')->get();
                 break;
             default:
-                $vendas = Venda::selectRaw('fNome, fCodigo, SUM(vndValorTotal) as totVenda')->join('Funcionario', 'Venda.idFuncionario', '=', 'Funcionario.idFuncionario')->whereRaw('vndStatus = "A"and (Funcionario.idTipoFunc = 1 AND Venda.idFuncionario = ?) OR (Funcionario.idTipoFunc = 2 AND Funcionario.fELider = ?)', [$this->funcionario['idFuncionario'], $this->funcionario['fEmail']])->groupBy('Venda.idFuncionario')->get();
+                $vendas = Venda::selectRaw('fNome, fCodigo, SUM(vndValorTotal) as totVenda')->join('Funcionario', 'Venda.idFuncionario', '=', 'Funcionario.idFuncionario')->whereRaw('vndStatus = "A" and ((Venda.idFuncionario = ?) OR (Funcionario.fELider = ?))', [$this->funcionario['idFuncionario'], $this->funcionario['fEmail']])->groupBy('Venda.idFuncionario')->get();
                 break;
         }
 

@@ -10,7 +10,7 @@
                     <form id="searchForm" class="d-flex pl-5 w-100 align-items-start" method="get" action="/mvcaplicado/public/gerente/produto">
                     <div style="width:32%" class="input-group ml-1 mt-4">
                         <div class="input-group-prepend">
-                            <span class="input-group-text">#</span>
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
                         </div>
                             <input id="searchprod" name="searchprod" list="listCodigos" type="text" class="form-control" placeholder="Código do Produto" autocomplete="off">
                             <div class="input-group-append">
@@ -25,8 +25,8 @@
                         
                     </div>
                     </form>
-					<table id="tblProdutos" class="table table-striped mt-2 tabelaProdutos">
-						<thead class="thead text-light" style="background-color: #222">
+					<table id="tblProdutos" class="table table-hover mt-2 tabelaProdutos">
+						<thead class="thead  text-light" style="background-color: #222">
 							<tr>
 								<th scope="col">Código</th>
 								<th scope="col">Nome</th>
@@ -39,7 +39,7 @@
                                 
 							</tr>
 						</thead>
-						<tbody>
+						<tbody class="table-bordered">
 							<?php 
 							if (count($data['produtos']) > 0) {
 						// print_r($data['funcionarios']);
@@ -64,15 +64,15 @@
                                                 <option value="<?= $produto['idCategoria'];?>"><?= str_replace('-',' ',$produto['ctgrNome']); ?></option>
                                             </select>
                                         </td>
-                                        <td>
+                                        <td style="width: 8em;">
                                             <select id="<?= $produto['idProduto']."produtoMarca" ?>" data-marcaid="<?= $produto['idMarca']?>" class="selectMarca custom-select w-100" name="produtoMarca">
                                                 <option value="<?= $produto['idMarca'];?>"><?= str_replace('-', ' ',$produto['mrcNome']); ?></option>
                                             </select>
                                         </td>
-										<td class="d-flex flex-row justify-content-between">
-											<button class="btn btn-defaultOur btn-sm" name="updateProd" onClick="alterarDadosProd('<?= $produto['idProduto']."idProduto" ?>')"><i class="fas fa-check-square"></i></button>
-											<button onClick="deletarProd('<?= $produto['idProduto']."idProduto" ?>')" class="btn btn-defaultOur btn-sm"><i class="fas fa-trash-alt"></i></button>
-                                            <a href="/mvcaplicado/public/gerente/produto/detalhes/<?= $produto['idProduto']; ?>"><button class="btn btn-defaultOur btn-sm"><i class="fas fa-search-plus"></i></button></a>
+										<td style="border-collapse: collapse !important; border-bottom: none; border-left: none; border-right: none;" class="d-flex flex-row justify-content-around p-0 pt-3 align-items-center">
+											<i onClick="alterarDadosProd('<?= $produto['idProduto']."idProduto" ?>')" class="fas fa-check-square"></i>
+											<i onClick="deletarProd('<?= $produto['idProduto']."idProduto" ?>')" class="fas fa-trash-alt"></i></button>
+                                            <a href="/mvcaplicado/public/gerente/produto/detalhes/<?= $produto['idProduto']; ?>"><i style="color:#111 !important" class="fas fa-search-plus"></i></a>
 										</td>
 									</tr>
 									<?php } ?>
@@ -81,7 +81,7 @@
 									</tr>-->
 
 								<?php } else{
-									echo "<tr style='background-color: #222'><td style='color: #fff' colspan='7'><center>Você ainda não possui produtos cadastrados :( <a href='/mvcaplicado/public/gerente/cadastrarprodutos'>Clique aqui</a> para cadastrar.</center></td></tr>";
+									echo "<tr><td colspan='7'><center>Você ainda não possui produtos cadastrados :( <a style='color: black !important; font-weight: bolder;' href='/mvcaplicado/public/gerente/cadastrarprodutos'>Clique aqui</a> para cadastrar.</center></td></tr>";
 								} ?>
 							</tbody>
 						</table>

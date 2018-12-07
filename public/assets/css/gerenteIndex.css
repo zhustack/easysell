@@ -102,40 +102,73 @@
 }
 
 .blocoFuncionario {
-	width: 80%;
+	width: 85%;
+	height: 75%;
+	background-color: #fff;
+	border-radius: 0.75em;
+	box-shadow: 0 0 8px #aaa;
 }
 
 .blocoFuncionario table {
 	margin-top: 5em;
-	width: 90%;
-	border: 1px solid;
+	width: 100%;
+}
+
+.blocoFuncionario table tbody {
+	background-color: white;
+}
+
+.blocoFuncionario table tbody input {
+	background-color: transparent;
+	border: none;
+	font-size: 1.15em;
 }
 
 .blocoFuncionario table tr {
-	height: 3em;
+	/* height: 3em; */
 }
 
 
 .blocoCategoria {
-	height: 90%;
-	width: 50%;
+	height: 75%;
+	width: 35%;
 	display: flex;
 	justify-content: start;
 	align-items: center;
 	flex-direction: column;
+	background-color: #fff;
+	border-radius: 0.75em;
+	box-shadow: 0 0 8px #aaa;
 }
 
 .blocoCategoria label {
-	width: 35%;
+	font-size: 245%;
 	text-align: center;
+	color: #000;
 }
 
 .blocoCategoria table {
-	width: 90%;
+	width: 100%;
+	/* background: #fff; */
 }
 
 .tabelaProdutos {
-    width: 90%;
+	width: 90%;
+	background: #fff;
+}
+
+.table-bordered i {
+	font-size: 1.2em;
+}
+
+.tabelaProdutos input {
+	border: none !important;
+	font-size: 1.15em;
+	background-color: transparent !important;
+}
+
+.tabelaProdutos:hover input {
+	background-color: transparent !important;
 }
 
 .tabelaProdutos button {

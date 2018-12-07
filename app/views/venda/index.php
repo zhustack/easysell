@@ -3,7 +3,7 @@
 	<?php require_once "../app/views/common/head.php"; ?>
 
 	<body>
-		<div class="container-fluid p-0 m-0 h-100 w-100 d-flex flex-ow">
+		<div class="container-fluid p-0 m-0 h-100 w-100 d-flex flex-row">
 			<?php 
 				if($_SESSION['dados']['idTipoFunc'] == 1) {
 					require_once "../app/views/common/navLateralG.php"; 			
@@ -117,13 +117,13 @@
 						<form action="/mvcaplicado/public/venda/finalizar" method="post">
 							<span class="dadosCliente mb-3">
 								<label class="display-4 text-center bg-dark text-light rounded p-1 mb-0">Dados do Cliente</label>
-								<input type="hidden" name="idVenda" id="idVenda" />
-								<input type="hidden" id="idCliente" name="idCliente" />
+								<input type="hidden" name="idVenda" id="idVenda" value="<?= $data['venda'][0]['idVenda']?>" />
+								<input type="hidden" id="idCliente" name="idCliente" value="<?= $data['venda'][0]['idCliente'] ?>" />
 								<div class="input-group">
 									<div class="input-group-append">
 										<span class="input-group-text espacamento"><i class="fas fa-user"></i></span>
 									</div>
-									<input class="form-control inputt" type="text" id="nomeCliente" name="nomeCliente" list="listaClientes" autocomplete="off" required="required" placeholder="Nome Completo" />
+									<input class="form-control inputt" type="text" id="nomeCliente" name="nomeCliente" list="listaClientes" autocomplete="off" required="required" placeholder="Nome Completo" value="<?= $data['venda'][0]['clntNomeCompleto'] ?>"/>
 									<datalist id="listaClientes">
 									</datalist>
 								</div>
@@ -131,13 +131,13 @@
 									<div class="input-group-append">
 										<span class="input-group-text espacamento"><i class="fas fa-mobile-alt"></i></i></span>
 									</div>
-									<input class="form-control inputt" type="text" id="telCliente" name="telCliente" autocomplete="off" required="required" placeholder="Telefone" />
+									<input class="form-control inputt" type="text" id="telCliente" name="telCliente" autocomplete="off" required="required" placeholder="Telefone" value="<?= $data['venda'][0]['clntTelefone'] ?>" />
 								</div>
 								<div class="input-group">
 									<div class="input-group-append">
 										<span class="input-group-text espacamento"><i class="fas fa-address-card"></i></span>
 									</div>
-									<input class="form-control" type="text" id="cpfCliente" name="cpfCliente" autocomplete="off" required="required" placeholder="CPF" />
+									<input class="form-control" type="text" id="cpfCliente" name="cpfCliente" autocomplete="off" required="required" placeholder="CPF" value="<?= $data['venda'][0]['clntCpf'] ?>"/>
 								</div>
 							</span>
 							<span>
@@ -156,9 +156,9 @@
 											<option selected value="1">1x</option>
 											<option value="2">2x</option>
 											<option value="3">3x</option>
-											<option value="4">3x</option>
-											<option value="5">3x</option>
-											<option value="6">3x</option>
+											<option value="4">4x</option>
+											<option value="5">5x</option>
+											<option value="6">6x</option>
 										</select>
 										<input type="text" class ="form-control" name="vndValorParcela" id="vndValorParcela" placeholder="Valor da Parcela" readonly />
 									</div>
@@ -211,24 +211,25 @@
 	?>
     <script>
 		var 
-			idCliente, 
-			idVenda,
+			
 			idProduto, 
 			prdtCodigo, 
 			prdtNome, 
 			prdtValor,
 			nItemInicial;
 
-		document.body.onload = fnVerVenda();
+		// document.body.onload = fnVerVenda();
 		
-		function fnVendaFail()
+	/*	function fnVendaFail()
 		{
 			conn = new XMLHttpRequest();
 			conn.open('GET', '/mvcaplicado/public/venda/fail/'+parseInt(document.all.idVenda.value));
 			conn.send();
 		}
 
-		function fnVerVenda(){
+	*/
+
+		/*function fnVerVenda(){
             const venda = new XMLHttpRequest();
             venda.open('GET', '/mvcaplicado/public/venda/consultaAberta/');
             venda.send();
@@ -236,14 +237,14 @@
                 if(venda.responseText == 0)  {
 					fnCriarCliente();
 				} else {
-					idVenda = venda.responseText;
-					document.all.idVenda.value = idVenda;
+					vendas = JSON.parse(venda.responseText);
+					document.all.idVenda.value = vendas['idVenda'];
 
-					fnVendaFail();
-					fnCriarCliente();
+					fnAbrirVenda(vendas['idCliente']);
+					// fnCriarCliente();
 				}
             }
-        }
+        } */
 
 		function fnCriarCliente(){
 			const cliente = new XMLHttpRequest();
@@ -257,7 +258,6 @@
 					telCliente.value = clienteJ[0].clntTelefone;
 					cpfCliente.value = clienteJ[0].clntCpf;
 				}
-				fnAbrirVenda(clienteJ[0].idCliente);
 			}
 		}
 
@@ -275,7 +275,7 @@
 			}
 		}
         
-		function fnAbrirVenda(idCliente) {
+		/*function fnAbrirVenda(idCliente) {
 			const venda = new XMLHttpRequest();
 			venda.open('GET', '/mvcaplicado/public/venda/abrir/'+idCliente);
 			venda.send();
@@ -283,7 +283,7 @@
 				idVenda = venda.responseText;
 				document.all.idVenda.value = idVenda;
 			}
-		}
+		} */
 
         function carregaProduto(codigo) {
 			
@@ -338,7 +338,7 @@
 
 			if(fnCountItens(nCodigo) == -1) {
 				const conexao = new XMLHttpRequest();
-				conexao.open('GET','/mvcaplicado/public/item/create/'+idProduto+'/'+document.all.qtdeItem.value+'/'+idVenda);
+				conexao.open('GET','/mvcaplicado/public/item/create/'+idProduto+'/'+document.all.qtdeItem.value+'/'+document.all.idVenda.value);
 				conexao.send();
 				conexao.onload = () => {
 					// alert(conexao.responseText);
